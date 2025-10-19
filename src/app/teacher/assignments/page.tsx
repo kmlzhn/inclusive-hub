@@ -13,7 +13,7 @@ export default function AssignmentsPage() {
   });
   
   const router = useRouter();
-  const [assignments, setAssignments] = useState([]);
+  const [assignments, setAssignments] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newAssignment, setNewAssignment] = useState({

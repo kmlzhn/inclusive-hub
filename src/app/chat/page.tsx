@@ -107,7 +107,7 @@ export default function ChatPage() {
 
           {/* Область сообщений */}
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
-            {messages.map((message) => (
+            {messages.map((message: any) => (
               <div
                 key={message.id}
                 className={`flex ${message.isUser ? "justify-end" : "justify-start"}`}

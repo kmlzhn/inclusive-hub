@@ -54,7 +54,7 @@ export default function ReportsPage() {
   const router = useRouter();
   const [reports, setReports] = useState(mockReports);
   const [stats, setStats] = useState(mockStats);
-  const [selectedReport, setSelectedReport] = useState(null);
+  const [selectedReport, setSelectedReport] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Проверка роли пользователя
@@ -72,7 +72,7 @@ export default function ReportsPage() {
     );
   }
 
-  const handleViewReport = (report) => {
+  const handleViewReport = (report: any) => {
     setSelectedReport(report);
     setIsModalOpen(true);
   };

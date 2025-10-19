@@ -13,7 +13,7 @@ export default function StudentsPage() {
   });
   
   const router = useRouter();
-  const [students, setStudents] = useState([]);
+  const [students, setStudents] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

@@ -15,10 +15,10 @@ export default function TrainingPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("courses");
-  const [courses, setCourses] = useState([]);
-  const [consultations, setConsultations] = useState([]);
-  const [selectedCourse, setSelectedCourse] = useState(null);
-  const [selectedConsultation, setSelectedConsultation] = useState(null);
+  const [courses, setCourses] = useState<any[]>([]);
+  const [consultations, setConsultations] = useState<any[]>([]);
+  const [selectedCourse, setSelectedCourse] = useState<any>(null);
+  const [selectedConsultation, setSelectedConsultation] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState("");
 
@@ -139,13 +139,13 @@ export default function TrainingPage() {
     router.push("/dashboard");
   };
 
-  const openCourseDetails = (course) => {
+  const openCourseDetails = (course: any) => {
     setSelectedCourse(course);
     setModalType("course");
     setIsModalOpen(true);
   };
 
-  const openConsultationDetails = (consultation) => {
+  const openConsultationDetails = (consultation: any) => {
     setSelectedConsultation(consultation);
     setModalType("consultation");
     setIsModalOpen(true);
@@ -157,12 +157,12 @@ export default function TrainingPage() {
     setSelectedConsultation(null);
   };
 
-  const handleBookConsultation = (date) => {
+  const handleBookConsultation = (date: string) => {
     alert(`Консультация с ${selectedConsultation.specialist} забронирована на ${new Date(date).toLocaleDateString('ru-RU')}`);
     closeModal();
   };
 
-  const handleStartCourse = (course) => {
+  const handleStartCourse = (course: any) => {
     alert(`Вы начали курс "${course.title}"`);
     const updatedCourses = courses.map(c => {
       if (c.id === course.id && c.progress === 0) {
@@ -174,7 +174,7 @@ export default function TrainingPage() {
     closeModal();
   };
 
-  const handleContinueCourse = (course) => {
+  const handleContinueCourse = (course: any) => {
     alert(`Вы продолжили курс "${course.title}"`);
     closeModal();
   };
@@ -236,7 +236,7 @@ export default function TrainingPage() {
                 <div>
                   <h5 className="text-md font-medium text-gray-900 mb-2">Модули курса</h5>
                   <ul className="space-y-2">
-                    {selectedCourse.modules.map((module, index) => (
+                    {selectedCourse.modules.map((module: any, index: number) => (
                       <li key={index} className="flex items-center">
                         <span className={`mr-2 h-5 w-5 flex items-center justify-center rounded-full ${module.completed ? 'bg-green-500' : 'bg-gray-200'}`}>
                           {module.completed && (
@@ -303,7 +303,7 @@ export default function TrainingPage() {
                 <div>
                   <h5 className="text-md font-medium text-gray-900 mb-2">Доступные даты</h5>
                   <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                    {selectedConsultation.availableDates.map((date, index) => (
+                    {selectedConsultation.availableDates.map((date: string, index: number) => (
                       <button
                         key={index}
                         onClick={() => handleBookConsultation(date)}
@@ -393,7 +393,7 @@ export default function TrainingPage() {
                         </div>
                         
                         <div className="flex flex-wrap gap-1 mb-4">
-                          {course.tags.map((tag, index) => (
+                          {course.tags.map((tag: string, index: number) => (
                             <span key={index} className="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">
                               {tag}
                             </span>

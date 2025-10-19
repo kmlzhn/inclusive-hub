@@ -142,7 +142,7 @@ export default function SpecialistStudentsPage() {
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                 >
                   <option value="">Все классы</option>
-                  {uniqueGrades.map((grade) => (
+                  {uniqueGrades.map((grade: string) => (
                     <option key={grade} value={grade}>{grade}</option>
                   ))}
                 </select>
@@ -175,7 +175,7 @@ export default function SpecialistStudentsPage() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredStudents.map((student) => (
+                  {filteredStudents.map((student: any) => (
                     <tr key={student.id}>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm font-medium text-gray-900">
@@ -192,7 +192,7 @@ export default function SpecialistStudentsPage() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="text-sm text-gray-500">
-                          {student.specialNeeds.map((need, index) => (
+                          {student.specialNeeds.map((need: string, index: number) => (
                             <span key={index} className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 mr-1 mb-1">
                               {need}
                             </span>

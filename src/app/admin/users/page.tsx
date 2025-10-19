@@ -54,7 +54,7 @@ export default function UsersManagement() {
 
   const router = useRouter();
   const [users, setUsers] = useState(mockUsers);
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedUser, setSelectedUser] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -78,7 +78,7 @@ export default function UsersManagement() {
     );
   }
 
-  const getRoleName = (role) => {
+  const getRoleName = (role: string) => {
     switch (role) {
       case "ADMIN": return "Администратор";
       case "TEACHER": return "Учитель";
@@ -101,7 +101,7 @@ export default function UsersManagement() {
     setIsModalOpen(true);
   };
 
-  const handleEditUser = (user) => {
+  const handleEditUser = (user: any) => {
     setSelectedUser(user);
     setFormData({
       name: user.name,
@@ -112,13 +112,13 @@ export default function UsersManagement() {
     setIsModalOpen(true);
   };
 
-  const handleDeleteUser = (userId) => {
+  const handleDeleteUser = (userId: any) => {
     if (window.confirm("Вы уверены, что хотите удалить этого пользователя?")) {
       setUsers(users.filter(user => user.id !== userId));
     }
   };
 
-  const handleFormChange = (e) => {
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -126,7 +126,7 @@ export default function UsersManagement() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     if (selectedUser) {

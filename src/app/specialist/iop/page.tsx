@@ -80,7 +80,7 @@ export default function SpecialistIopPage() {
   const [iops, setIops] = useState(mockIops);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("");
-  const [selectedIop, setSelectedIop] = useState(null);
+  const [selectedIop, setSelectedIop] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Проверка роли пользователя
@@ -106,12 +106,12 @@ export default function SpecialistIopPage() {
     return nameMatch && statusMatch;
   });
 
-  const handleViewIop = (iop) => {
+  const handleViewIop = (iop: any) => {
     setSelectedIop(iop);
     setIsModalOpen(true);
   };
 
-  const getStatusBadgeColor = (status) => {
+  const getStatusBadgeColor = (status: string) => {
     switch (status) {
       case "active": return "bg-green-100 text-green-800";
       case "draft": return "bg-yellow-100 text-yellow-800";
@@ -121,7 +121,7 @@ export default function SpecialistIopPage() {
     }
   };
 
-  const getStatusText = (status) => {
+  const getStatusText = (status: string) => {
     switch (status) {
       case "active": return "Активен";
       case "draft": return "Черновик";
@@ -291,7 +291,7 @@ export default function SpecialistIopPage() {
                       <div className="mb-4">
                         <h4 className="text-md font-medium text-gray-900">Цели</h4>
                         <ul className="list-disc pl-5 text-sm text-gray-500">
-                          {selectedIop.goals.map((goal, index) => (
+                          {selectedIop.goals.map((goal: string, index: number) => (
                             <li key={index}>{goal}</li>
                           ))}
                         </ul>
@@ -299,7 +299,7 @@ export default function SpecialistIopPage() {
                       <div className="mb-4">
                         <h4 className="text-md font-medium text-gray-900">Адаптации</h4>
                         <ul className="list-disc pl-5 text-sm text-gray-500">
-                          {selectedIop.adaptations.map((adaptation, index) => (
+                          {selectedIop.adaptations.map((adaptation: string, index: number) => (
                             <li key={index}>{adaptation}</li>
                           ))}
                         </ul>
@@ -307,7 +307,7 @@ export default function SpecialistIopPage() {
                       <div className="mb-4">
                         <h4 className="text-md font-medium text-gray-900">Методы</h4>
                         <ul className="list-disc pl-5 text-sm text-gray-500">
-                          {selectedIop.methods.map((method, index) => (
+                          {selectedIop.methods.map((method: string, index: number) => (
                             <li key={index}>{method}</li>
                           ))}
                         </ul>

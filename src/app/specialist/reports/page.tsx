@@ -43,7 +43,7 @@ export default function SpecialistReportsPage() {
 
   const [reports, setReports] = useState(mockReports);
   const [filterStatus, setFilterStatus] = useState("");
-  const [selectedReport, setSelectedReport] = useState(null);
+  const [selectedReport, setSelectedReport] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -78,7 +78,7 @@ export default function SpecialistReportsPage() {
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   });
 
-  const handleViewReport = (report) => {
+  const handleViewReport = (report: any) => {
     setSelectedReport(report);
     setIsModalOpen(true);
   };
@@ -92,7 +92,7 @@ export default function SpecialistReportsPage() {
     });
   };
 
-  const handleFormChange = (e) => {
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -100,7 +100,7 @@ export default function SpecialistReportsPage() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     const newReport = {
@@ -116,7 +116,7 @@ export default function SpecialistReportsPage() {
     setIsAddModalOpen(false);
   };
 
-  const getStatusBadgeColor = (status) => {
+  const getStatusBadgeColor = (status: string) => {
     switch (status) {
       case "draft": return "bg-yellow-100 text-yellow-800";
       case "submitted": return "bg-green-100 text-green-800";
@@ -125,7 +125,7 @@ export default function SpecialistReportsPage() {
     }
   };
 
-  const getStatusText = (status) => {
+  const getStatusText = (status: string) => {
     switch (status) {
       case "draft": return "Черновик";
       case "submitted": return "Отправлен";

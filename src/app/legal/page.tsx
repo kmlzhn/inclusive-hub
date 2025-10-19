@@ -141,7 +141,7 @@ export default function LegalPage() {
 
         {/* Список документов */}
         <div className="space-y-6">
-          {documents.map((document) => (
+          {documents.map((document: any) => (
             <div key={document.id} className="bg-white rounded-lg shadow-md border border-gray-200">
               <div 
                 className="p-6 cursor-pointer hover:bg-gray-50 transition-colors"

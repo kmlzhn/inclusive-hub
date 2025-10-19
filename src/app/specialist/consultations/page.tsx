@@ -70,7 +70,7 @@ export default function SpecialistConsultationsPage() {
   const [consultations, setConsultations] = useState(mockConsultations);
   const [filterStatus, setFilterStatus] = useState("");
   const [filterType, setFilterType] = useState("");
-  const [selectedConsultation, setSelectedConsultation] = useState(null);
+  const [selectedConsultation, setSelectedConsultation] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -128,7 +128,7 @@ export default function SpecialistConsultationsPage() {
     c => c.status === "completed" || new Date(c.date) <= new Date()
   );
 
-  const handleViewConsultation = (consultation) => {
+  const handleViewConsultation = (consultation: any) => {
     setSelectedConsultation(consultation);
     setIsModalOpen(true);
   };
@@ -145,7 +145,7 @@ export default function SpecialistConsultationsPage() {
     });
   };
 
-  const handleFormChange = (e) => {
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     
     if (name === "studentId") {
@@ -163,7 +163,7 @@ export default function SpecialistConsultationsPage() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     const newConsultation = {
@@ -181,7 +181,7 @@ export default function SpecialistConsultationsPage() {
     setIsAddModalOpen(false);
   };
 
-  const getStatusBadgeColor = (status) => {
+  const getStatusBadgeColor = (status: string) => {
     switch (status) {
       case "scheduled": return "bg-blue-100 text-blue-800";
       case "completed": return "bg-green-100 text-green-800";
@@ -190,7 +190,7 @@ export default function SpecialistConsultationsPage() {
     }
   };
 
-  const getStatusText = (status) => {
+  const getStatusText = (status: string) => {
     switch (status) {
       case "scheduled": return "Запланирована";
       case "completed": return "Завершена";
@@ -199,7 +199,7 @@ export default function SpecialistConsultationsPage() {
     }
   };
 
-  const getTypeText = (type) => {
+  const getTypeText = (type: string) => {
     switch (type) {
       case "individual": return "Индивидуальная";
       case "group": return "Групповая";

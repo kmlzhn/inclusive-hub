@@ -76,7 +76,7 @@ const handler = NextAuth({
           id: user.id,
           name: user.name,
           email: user.email,
-          role: user.role,
+          role: user.role as "ADMIN" | "TEACHER" | "PSYCHOLOGIST" | "DEFECTOLOGIST" | "SPEECH_THERAPIST" | "TUTOR",
         };
       },
     }),

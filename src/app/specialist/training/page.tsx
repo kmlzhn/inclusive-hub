@@ -161,9 +161,9 @@ export default function SpecialistTrainingPage() {
     },
   });
 
-  const [trainings, setTrainings] = useState([]);
+  const [trainings, setTrainings] = useState<any[]>([]);
   const [filterType, setFilterType] = useState("");
-  const [selectedTraining, setSelectedTraining] = useState(null);
+  const [selectedTraining, setSelectedTraining] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Проверка роли пользователя и загрузка соответствующих тренингов
@@ -214,12 +214,12 @@ export default function SpecialistTrainingPage() {
     training => training.isCompleted || new Date(training.date) <= new Date()
   ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-  const handleViewTraining = (training) => {
+  const handleViewTraining = (training: any) => {
     setSelectedTraining(training);
     setIsModalOpen(true);
   };
 
-  const getTrainingTypeText = (type) => {
+  const getTrainingTypeText = (type: string) => {
     switch (type) {
       case "webinar": return "Вебинар";
       case "workshop": return "Практикум";
@@ -228,7 +228,7 @@ export default function SpecialistTrainingPage() {
     }
   };
 
-  const getTrainingTypeBadgeColor = (type) => {
+  const getTrainingTypeBadgeColor = (type: string) => {
     switch (type) {
       case "webinar": return "bg-blue-100 text-blue-800";
       case "workshop": return "bg-green-100 text-green-800";
@@ -422,7 +422,7 @@ export default function SpecialistTrainingPage() {
                       <div>
                         <h4 className="text-sm font-medium text-gray-700">Материалы</h4>
                         <ul className="list-disc pl-5 text-sm text-gray-500">
-                          {selectedTraining.materials.map((material, index) => (
+                          {selectedTraining.materials.map((material: string, index: number) => (
                             <li key={index}>{material}</li>
                           ))}
                         </ul>

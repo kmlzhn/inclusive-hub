@@ -58,7 +58,7 @@ export default function ResourcesPage() {
 
   const router = useRouter();
   const [resources, setResources] = useState(mockResources);
-  const [selectedResource, setSelectedResource] = useState(null);
+  const [selectedResource, setSelectedResource] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -100,7 +100,7 @@ export default function ResourcesPage() {
     setIsModalOpen(true);
   };
 
-  const handleEditResource = (resource) => {
+  const handleEditResource = (resource: any) => {
     setSelectedResource(resource);
     setFormData({
       name: resource.name,
@@ -112,13 +112,13 @@ export default function ResourcesPage() {
     setIsModalOpen(true);
   };
 
-  const handleDeleteResource = (resourceId) => {
+  const handleDeleteResource = (resourceId: any) => {
     if (window.confirm("Вы уверены, что хотите удалить этот ресурс?")) {
       setResources(resources.filter(resource => resource.id !== resourceId));
     }
   };
 
-  const handleFormChange = (e) => {
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -126,7 +126,7 @@ export default function ResourcesPage() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     if (selectedResource) {
@@ -163,7 +163,7 @@ export default function ResourcesPage() {
     router.push("/dashboard");
   };
 
-  const getAvailabilityBadgeColor = (availability) => {
+  const getAvailabilityBadgeColor = (availability: string) => {
     switch (availability) {
       case "available": return "bg-green-100 text-green-800";
       case "occupied": return "bg-yellow-100 text-yellow-800";
@@ -172,7 +172,7 @@ export default function ResourcesPage() {
     }
   };
 
-  const getAvailabilityText = (availability) => {
+  const getAvailabilityText = (availability: string) => {
     switch (availability) {
       case "available": return "Доступен";
       case "occupied": return "Занят";
@@ -181,7 +181,7 @@ export default function ResourcesPage() {
     }
   };
 
-  const getResourceTypeText = (type) => {
+  const getResourceTypeText = (type: string) => {
     switch (type) {
       case "room": return "Помещение";
       case "equipment": return "Оборудование";

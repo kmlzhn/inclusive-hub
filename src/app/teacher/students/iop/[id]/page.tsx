@@ -4,7 +4,13 @@ import { useSession } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
-export default function IndividualPlanPage({ params }: { params: { id: string } }) {
+export default async function IndividualPlanPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = await params;
+  
+  return <IndividualPlanClient params={resolvedParams} />;
+}
+
+function IndividualPlanClient({ params }: { params: { id: string } }) {
   const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
