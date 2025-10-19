@@ -1,0 +1,93 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         Role
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  students     StudentTeacher[]
+}
+
+model Student {
+  id             String   @id @default(uuid())
+  firstName      String
+  lastName       String
+  middleName     String?
+  birthDate      DateTime
+  grade          String
+  specialNeeds   String[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  teachers       StudentTeacher[]
+  observations   Observation[]
+  attendances    Attendance[]
+  individualPlan IndividualPlan?
+}
+
+model StudentTeacher {
+  id        String   @id @default(uuid())
+  student   Student  @relation(fields: [studentId], references: [id])
+  studentId String
+  teacher   User     @relation(fields: [teacherId], references: [id])
+  teacherId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([studentId, teacherId])
+}
+
+model Observation {
+  id        String   @id @default(uuid())
+  student   Student  @relation(fields: [studentId], references: [id])
+  studentId String
+  content   String
+  date      DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Attendance {
+  id        String   @id @default(uuid())
+  student   Student  @relation(fields: [studentId], references: [id])
+  studentId String
+  date      DateTime
+  present   Boolean
+  reason    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model IndividualPlan {
+  id          String   @id @default(uuid())
+  student     Student  @relation(fields: [studentId], references: [id])
+  studentId   String   @unique
+  goals       String[]
+  adaptations String[]
+  methods     String[]
+  startDate   DateTime
+  endDate     DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum Role {
+  ADMIN
+  TEACHER
+  PSYCHOLOGIST
+  DEFECTOLOGIST
+  SPEECH_THERAPIST
+  TUTOR
+}
