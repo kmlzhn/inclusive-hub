@@ -167,6 +167,66 @@ export default function Dashboard() {
               </div>
             </div>
 
+            {/* Общие ресурсы - доступны для всех */}
+            <div className="mb-6">
+              <h3 className="text-xl font-semibold mb-4">Общие ресурсы</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* AI Чат-бот */}
+                <div className="bg-white overflow-hidden shadow rounded-lg border border-gray-200">
+                  <div className="px-4 py-5 sm:p-6">
+                    <div className="flex items-center">
+                      <div className="flex-shrink-0">
+                        <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                          <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div className="ml-4 flex-1">
+                        <h4 className="text-lg font-medium text-gray-900">AI Чат-бот по инклюзии</h4>
+                        <p className="mt-1 text-sm text-gray-600">Получите помощь по вопросам инклюзивного образования</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-gray-50 px-4 py-3">
+                    <button 
+                      onClick={() => router.push("/chat")}
+                      className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                    >
+                      Открыть чат-бот →
+                    </button>
+                  </div>
+                </div>
+
+                {/* Нормативные акты */}
+                <div className="bg-white overflow-hidden shadow rounded-lg border border-gray-200">
+                  <div className="px-4 py-5 sm:p-6">
+                    <div className="flex items-center">
+                      <div className="flex-shrink-0">
+                        <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                          <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div className="ml-4 flex-1">
+                        <h4 className="text-lg font-medium text-gray-900">Нормативные акты</h4>
+                        <p className="mt-1 text-sm text-gray-600">Законы и правовые документы по инклюзии</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-gray-50 px-4 py-3">
+                    <button 
+                      onClick={() => router.push("/legal")}
+                      className="text-sm text-green-600 hover:text-green-800 font-medium"
+                    >
+                      Открыть документы →
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* Доступные модули */}
             <h3 className="text-xl font-semibold mb-4">Доступные модули</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

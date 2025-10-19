@@ -212,7 +212,7 @@ export default function SpecialistStudentsPage() {
                           Профиль
                         </button>
                         <button
-                          className="text-indigo-600 hover:text-indigo-900"
+                          className="text-primary-600 hover:text-primary-900"
                           onClick={() => {/* Добавить наблюдение */}}
                         >
                           Наблюдение

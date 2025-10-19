@@ -158,7 +158,7 @@ export default function SpecialistIopPage() {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Введите ФИО ученика"
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-500 focus:border-primary-500"
                 />
               </div>
               <div className="w-full md:w-1/4">
@@ -167,7 +167,7 @@ export default function SpecialistIopPage() {
                   id="status"
                   value={filterStatus}
                   onChange={(e) => setFilterStatus(e.target.value)}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-500 focus:border-primary-500"
                 >
                   <option value="">Все статусы</option>
                   <option value="active">Активные</option>
@@ -179,7 +179,7 @@ export default function SpecialistIopPage() {
               <div className="w-full md:w-1/4 flex items-end">
                 <button
                   onClick={() => {/* Создать новый ИОП */}}
-                  className="w-full px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-md text-sm font-medium"
+                  className="w-full px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md text-sm font-medium"
                 >
                   Создать новый ИОП
                 </button>
@@ -241,13 +241,13 @@ export default function SpecialistIopPage() {
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <button
                           onClick={() => handleViewIop(iop)}
-                          className="text-primary-600 hover:text-primary-900 mr-4"
+                          className="text-gray-600 hover:text-gray-900 mr-4"
                         >
                           Просмотр
                         </button>
                         <button
                           onClick={() => {/* Редактировать ИОП */}}
-                          className="text-indigo-600 hover:text-indigo-900"
+                          className="text-gray-600 hover:text-gray-900"
                         >
                           Редактировать
                         </button>
@@ -324,14 +324,14 @@ export default function SpecialistIopPage() {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-600 text-base font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:ml-3 sm:w-auto sm:text-sm"
+                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-600 text-base font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:ml-3 sm:w-auto sm:text-sm"
                 >
                   Закрыть
                 </button>
                 <button
                   type="button"
                   onClick={() => {/* Редактировать ИОП */}}
-                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                 >
                   Редактировать
                 </button>

@@ -20,12 +20,14 @@ export default function NavBar({ title }: NavBarProps) {
   return (
     <>
       {/* Навигационная панель */}
-      <nav className="bg-primary-700 text-white">
+      <nav className="bg-white text-black border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <h1 className="text-xl font-bold">InclusiveHub</h1>
+                <h1 className="text-xl font-bold text-gray-800">
+                  Inclusive<span className="text-secondary-500">Hub</span>
+                </h1>
               </div>
             </div>
             <div className="hidden md:block">
@@ -41,10 +43,10 @@ export default function NavBar({ title }: NavBarProps) {
                     </svg>
                   </button>
                   {isMenuOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 border border-gray-200">
                       <button
                         onClick={() => signOut({ callbackUrl: "/auth/login" })}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                       >
                         Выйти
                       </button>
@@ -58,12 +60,12 @@ export default function NavBar({ title }: NavBarProps) {
       </nav>
 
       {/* Заголовок страницы */}
-      <header className="bg-white shadow">
+      <header className="bg-white shadow border-b border-gray-100">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <h2 className="text-3xl font-bold text-gray-900">{title}</h2>
+          <h2 className="text-3xl font-bold text-gray-800">{title}</h2>
           <button
             onClick={handleBackToDashboard}
-            className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md text-sm font-medium"
+            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md text-sm font-medium transition-colors"
           >
             Назад к панели управления
           </button>
