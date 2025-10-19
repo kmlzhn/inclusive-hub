@@ -3,6 +3,7 @@
 import { useSession } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function AssignmentsPage() {
   const { data: session, status } = useSession({
@@ -13,6 +14,7 @@ export default function AssignmentsPage() {
   });
   
   const router = useRouter();
+  const { t } = useLanguage();
   const [assignments, setAssignments] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -71,6 +73,36 @@ export default function AssignmentsPage() {
   const handleBackToDashboard = () => {
     router.push("/dashboard");
   };
+
+  const translateSubject = (subject: string) => {
+    const subjectMap: { [key: string]: string } = {
+      'Математика': t('subjects.mathematics'),
+      'Русский язык': t('subjects.russian'),
+      'Литература': t('subjects.literature'),
+      'Окружающий мир': t('subjects.world_around'),
+      'История': t('subjects.history'),
+      'География': t('subjects.geography'),
+      'Биология': t('subjects.biology'),
+      'Физика': t('subjects.physics'),
+      'Химия': t('subjects.chemistry'),
+      'Информатика': t('subjects.informatics'),
+      'Иностранный язык': t('subjects.foreign_language'),
+    };
+    return subjectMap[subject] || subject;
+  };
+
+  const translateAdaptation = (adaptation: string) => {
+    const adaptationMap: { [key: string]: string } = {
+      'Увеличенный шрифт': t('adaptations.large_font'),
+      'Дополнительное время': t('adaptations.extra_time'),
+      'Визуальные подсказки': t('adaptations.visual_hints'),
+      'Пошаговые инструкции': t('adaptations.step_instructions'),
+      'Работа в паре': t('adaptations.pair_work'),
+      'Аудио инструкции': t('adaptations.audio_instructions'),
+      'Отдельное помещение': t('adaptations.separate_room'),
+    };
+    return adaptationMap[adaptation] || adaptation;
+  };
   
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -122,17 +154,17 @@ export default function AssignmentsPage() {
   const handleAddAssignment = () => {
     // Validate form
     if (!newAssignment.title.trim()) {
-      alert("Пожалуйста, введите название задания");
+      alert(t('assignments.messages.title_required'));
       return;
     }
     
     if (!newAssignment.subject.trim()) {
-      alert("Пожалуйста, выберите предмет");
+      alert(t('assignments.messages.subject_required'));
       return;
     }
     
     if (!newAssignment.dueDate) {
-      alert("Пожалуйста, укажите срок сдачи");
+      alert(t('assignments.messages.due_date_required'));
       return;
     }
     
@@ -154,17 +186,17 @@ export default function AssignmentsPage() {
     handleCloseModal();
     
     // В реальном приложении здесь был бы запрос к API для сохранения данных
-    alert("Задание успешно создано!");
+    alert(t('assignments.messages.created_success'));
   };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "active":
-        return <span className="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">Активно</span>;
+        return <span className="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">{t('assignment_status.active')}</span>;
       case "pending":
-        return <span className="px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">Ожидает</span>;
+        return <span className="px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">{t('assignment_status.pending')}</span>;
       case "completed":
-        return <span className="px-2 py-1 text-xs bg-gray-100 text-gray-800 rounded-full">Завершено</span>;
+        return <span className="px-2 py-1 text-xs bg-gray-100 text-gray-800 rounded-full">{t('assignment_status.completed')}</span>;
       default:
         return null;
     }
@@ -173,7 +205,7 @@ export default function AssignmentsPage() {
   if (status === "loading" || isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-lg">Загрузка...</p>
+        <p className="text-lg">{t('assignments.loading')}</p>
       </div>
     );
   }
@@ -185,7 +217,7 @@ export default function AssignmentsPage() {
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-medium text-gray-900">Создать задание</h3>
+              <h3 className="text-lg font-medium text-gray-900">{t('assignments.create_modal_title')}</h3>
               <button
                 onClick={handleCloseModal}
                 className="text-gray-400 hover:text-gray-500"
@@ -199,7 +231,7 @@ export default function AssignmentsPage() {
             <div className="space-y-4">
               <div>
                 <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-                  Название задания
+                  {t('assignments.form.title_label')}
                 </label>
                 <input
                   type="text"
@@ -207,14 +239,14 @@ export default function AssignmentsPage() {
                   id="title"
                   value={newAssignment.title}
                   onChange={handleInputChange}
-                  placeholder="Введите название задания"
+                  placeholder={t('assignments.form.title_placeholder')}
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
                 />
               </div>
               
               <div>
                 <label htmlFor="subject" className="block text-sm font-medium text-gray-700">
-                  Предмет
+                  {t('assignments.form.subject_label')}
                 </label>
                 <select
                   id="subject"
@@ -223,24 +255,24 @@ export default function AssignmentsPage() {
                   onChange={handleInputChange}
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
                 >
-                  <option value="">Выберите предмет</option>
-                  <option value="Математика">Математика</option>
-                  <option value="Русский язык">Русский язык</option>
-                  <option value="Литература">Литература</option>
-                  <option value="Окружающий мир">Окружающий мир</option>
-                  <option value="История">История</option>
-                  <option value="География">География</option>
-                  <option value="Биология">Биология</option>
-                  <option value="Физика">Физика</option>
-                  <option value="Химия">Химия</option>
-                  <option value="Информатика">Информатика</option>
-                  <option value="Иностранный язык">Иностранный язык</option>
+                  <option value="">{t('assignments.form.subject_placeholder')}</option>
+                  <option value="Математика">{t('subjects.mathematics')}</option>
+                  <option value="Русский язык">{t('subjects.russian')}</option>
+                  <option value="Литература">{t('subjects.literature')}</option>
+                  <option value="Окружающий мир">{t('subjects.world_around')}</option>
+                  <option value="История">{t('subjects.history')}</option>
+                  <option value="География">{t('subjects.geography')}</option>
+                  <option value="Биология">{t('subjects.biology')}</option>
+                  <option value="Физика">{t('subjects.physics')}</option>
+                  <option value="Химия">{t('subjects.chemistry')}</option>
+                  <option value="Информатика">{t('subjects.informatics')}</option>
+                  <option value="Иностранный язык">{t('subjects.foreign_language')}</option>
                 </select>
               </div>
               
               <div>
                 <label htmlFor="dueDate" className="block text-sm font-medium text-gray-700">
-                  Срок сдачи
+                  {t('assignments.form.due_date_label')}
                 </label>
                 <input
                   type="date"
@@ -254,7 +286,7 @@ export default function AssignmentsPage() {
               
               <div>
                 <label htmlFor="status" className="block text-sm font-medium text-gray-700">
-                  Статус
+                  {t('assignments.form.status_label')}
                 </label>
                 <select
                   id="status"
@@ -263,23 +295,23 @@ export default function AssignmentsPage() {
                   onChange={handleInputChange}
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
                 >
-                  <option value="active">Активно</option>
-                  <option value="pending">Ожидает</option>
-                  <option value="completed">Завершено</option>
+                  <option value="active">{t('assignment_status.active')}</option>
+                  <option value="pending">{t('assignment_status.pending')}</option>
+                  <option value="completed">{t('assignment_status.completed')}</option>
                 </select>
               </div>
               
               <div>
                 <div className="flex justify-between items-center">
                   <label className="block text-sm font-medium text-gray-700">
-                    Адаптации
+                    {t('assignments.form.adaptations_label')}
                   </label>
                   <button
                     type="button"
                     onClick={handleAddAdaptation}
                     className="text-sm text-primary-600 hover:text-primary-800"
                   >
-                    + Добавить адаптацию
+                    {t('assignments.form.add_adaptation')}
                   </button>
                 </div>
                 <div className="mt-2 space-y-2">
@@ -289,7 +321,7 @@ export default function AssignmentsPage() {
                         type="text"
                         value={adaptation}
                         onChange={(e) => handleAdaptationChange(index, e.target.value)}
-                        placeholder="Введите адаптацию"
+                        placeholder={t('assignments.form.adaptation_placeholder')}
                         className="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
                       />
                       {newAssignment.adaptations.length > 1 && (
@@ -315,14 +347,14 @@ export default function AssignmentsPage() {
                 onClick={handleCloseModal}
                 className="inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
               >
-                Отмена
+                {t('assignments.form.cancel')}
               </button>
               <button
                 type="button"
                 onClick={handleAddAssignment}
                 className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
               >
-                Создать
+                {t('assignments.form.create')}
               </button>
             </div>
           </div>
@@ -331,12 +363,12 @@ export default function AssignmentsPage() {
       
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-900">Задания</h1>
+          <h1 className="text-3xl font-bold text-gray-900">{t('assignments.title')}</h1>
           <button
             onClick={handleBackToDashboard}
             className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300"
           >
-            Назад
+            {t('assignments.back')}
           </button>
         </div>
       </header>
@@ -348,17 +380,17 @@ export default function AssignmentsPage() {
               <div className="px-4 py-5 sm:px-6 flex justify-between items-center">
                 <div>
                   <h3 className="text-lg leading-6 font-medium text-gray-900">
-                    Список заданий
+                    {t('assignments.list_title')}
                   </h3>
                   <p className="mt-1 max-w-2xl text-sm text-gray-500">
-                    Всего заданий: {assignments.length}
+                    {t('assignments.total_count')} {assignments.length}
                   </p>
                 </div>
                 <button 
                   onClick={handleOpenModal}
                   className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700"
                 >
-                  Создать задание
+                  {t('assignments.create_button')}
                 </button>
               </div>
               
@@ -367,22 +399,22 @@ export default function AssignmentsPage() {
                   <thead className="bg-gray-50">
                     <tr>
                       <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Название
+                        {t('assignments.table.name')}
                       </th>
                       <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Предмет
+                        {t('assignments.table.subject')}
                       </th>
                       <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Срок сдачи
+                        {t('assignments.table.due_date')}
                       </th>
                       <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Статус
+                        {t('assignments.table.status')}
                       </th>
                       <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Адаптации
+                        {t('assignments.table.adaptations')}
                       </th>
                       <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Действия
+                        {t('assignments.table.actions')}
                       </th>
                     </tr>
                   </thead>
@@ -393,7 +425,7 @@ export default function AssignmentsPage() {
                           {assignment.title}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {assignment.subject}
+                          {translateSubject(assignment.subject)}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {new Date(assignment.dueDate).toLocaleDateString('ru-RU')}
@@ -405,17 +437,17 @@ export default function AssignmentsPage() {
                           <div className="flex flex-wrap gap-1">
                             {assignment.adaptations.map((adaptation: string, index: number) => (
                               <span key={index} className="px-2 py-1 text-xs bg-purple-100 text-purple-800 rounded-full">
-                                {adaptation}
+                                {translateAdaptation(adaptation)}
                               </span>
                             ))}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           <button className="text-primary-600 hover:text-primary-900 mr-3">
-                            Редактировать
+                            {t('assignments.actions.edit')}
                           </button>
                           <button className="text-secondary-600 hover:text-secondary-900">
-                            Проверить
+                            {t('assignments.actions.check')}
                           </button>
                         </td>
                       </tr>

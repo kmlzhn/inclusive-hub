@@ -3,6 +3,9 @@
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useLanguage } from "@/context/LanguageContext";
+import LanguageSwitcher from "./LanguageSwitcher";
+import MobileLanguageSwitcher from "./MobileLanguageSwitcher";
 
 interface NavBarProps {
   title: string;
@@ -12,6 +15,7 @@ export default function NavBar({ title }: NavBarProps) {
   const { data: session } = useSession();
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { t } = useLanguage();
 
   const handleBackToDashboard = () => {
     router.push("/dashboard");
@@ -20,18 +24,27 @@ export default function NavBar({ title }: NavBarProps) {
   return (
     <>
       {/* Навигационная панель */}
-      <nav className="bg-white text-black border-b border-gray-200">
+      <nav className="bg-primary-700 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <h1 className="text-xl font-bold text-gray-800">
-                  Inclusive<span className="text-secondary-500">Hub</span>
+                <h1 className="text-xl font-bold text-white">
+                  Inclusive<span className="text-orange-400">Hub</span>
                 </h1>
               </div>
             </div>
+            
+            {/* Мобильная версия переключателя языка */}
+            <div className="md:hidden">
+              <MobileLanguageSwitcher />
+            </div>
+            
             <div className="hidden md:block">
-              <div className="ml-4 flex items-center md:ml-6">
+              <div className="ml-4 flex items-center md:ml-6 space-x-4">
+                {/* Переключатель языка */}
+                <LanguageSwitcher />
+                
                 <div className="relative">
                   <button
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -48,7 +61,7 @@ export default function NavBar({ title }: NavBarProps) {
                         onClick={() => signOut({ callbackUrl: "/auth/login" })}
                         className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                       >
-                        Выйти
+                        {t('nav.logout')}
                       </button>
                     </div>
                   )}
@@ -67,7 +80,7 @@ export default function NavBar({ title }: NavBarProps) {
             onClick={handleBackToDashboard}
             className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md text-sm font-medium transition-colors"
           >
-            Назад к панели управления
+            {t('nav.back_to_dashboard')}
           </button>
         </div>
       </header>

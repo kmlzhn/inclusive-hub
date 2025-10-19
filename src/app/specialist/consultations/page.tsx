@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useState, useEffect } from "react";
 import NavBar from "@/components/layout/NavBar";
+import { useLanguage } from "@/context/LanguageContext";
 
 // Мок данных для консультаций
 const mockConsultations = [
@@ -67,6 +68,7 @@ export default function SpecialistConsultationsPage() {
     },
   });
 
+  const { t } = useLanguage();
   const [consultations, setConsultations] = useState(mockConsultations);
   const [filterStatus, setFilterStatus] = useState("");
   const [filterType, setFilterType] = useState("");
@@ -102,7 +104,7 @@ export default function SpecialistConsultationsPage() {
   if (status === "loading") {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-lg">Загрузка...</p>
+        <p className="text-lg">{t('common.loading')}</p>
       </div>
     );
   }
@@ -192,34 +194,34 @@ export default function SpecialistConsultationsPage() {
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case "scheduled": return "Запланирована";
-      case "completed": return "Завершена";
-      case "cancelled": return "Отменена";
-      default: return "Неизвестно";
+      case "scheduled": return t('specialist.consultations.scheduled');
+      case "completed": return t('specialist.consultations.completed');
+      case "cancelled": return t('specialist.consultations.cancelled');
+      default: return t('specialist.iop.unknown');
     }
   };
 
   const getTypeText = (type: string) => {
     switch (type) {
-      case "individual": return "Индивидуальная";
-      case "group": return "Групповая";
-      default: return "Неизвестно";
+      case "individual": return t('specialist.consultations.individual');
+      case "group": return t('specialist.consultations.group');
+      default: return t('specialist.iop.unknown');
     }
   };
 
   const getSpecialistTitle = () => {
     switch (session?.user?.role) {
-      case "PSYCHOLOGIST": return "Психолог";
-      case "DEFECTOLOGIST": return "Дефектолог";
-      case "SPEECH_THERAPIST": return "Логопед";
-      case "TUTOR": return "Тьютор";
-      default: return "Специалист";
+      case "PSYCHOLOGIST": return t('role.psychologist');
+      case "DEFECTOLOGIST": return t('role.defectologist');
+      case "SPEECH_THERAPIST": return t('role.speech_therapist');
+      case "TUTOR": return t('role.tutor');
+      default: return t('role.user');
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <NavBar title={`${getSpecialistTitle()}: Консультации`} />
+      <NavBar title={`${getSpecialistTitle()}: ${t('dashboard.specialist.consultations')}`} />
 
       <main>
         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
@@ -227,30 +229,30 @@ export default function SpecialistConsultationsPage() {
             {/* Фильтры и кнопка добавления */}
             <div className="flex flex-col md:flex-row justify-between mb-6 space-y-4 md:space-y-0">
               <div className="w-full md:w-1/4">
-                <label htmlFor="status" className="block text-sm font-medium text-gray-700">Фильтр по статусу</label>
+                <label htmlFor="status" className="block text-sm font-medium text-gray-700">{t('specialist.consultations.filter_by_status')}</label>
                 <select
                   id="status"
                   value={filterStatus}
                   onChange={(e) => setFilterStatus(e.target.value)}
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-500 focus:border-primary-500"
                 >
-                  <option value="">Все статусы</option>
-                  <option value="scheduled">Запланированные</option>
-                  <option value="completed">Завершенные</option>
-                  <option value="cancelled">Отмененные</option>
+                  <option value="">{t('specialist.iop.all_statuses')}</option>
+                  <option value="scheduled">{t('specialist.consultations.scheduled')}</option>
+                  <option value="completed">{t('specialist.consultations.completed')}</option>
+                  <option value="cancelled">{t('specialist.consultations.cancelled')}</option>
                 </select>
               </div>
               <div className="w-full md:w-1/4">
-                <label htmlFor="type" className="block text-sm font-medium text-gray-700">Фильтр по типу</label>
+                <label htmlFor="type" className="block text-sm font-medium text-gray-700">{t('specialist.consultations.filter_by_type')}</label>
                 <select
                   id="type"
                   value={filterType}
                   onChange={(e) => setFilterType(e.target.value)}
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-500 focus:border-primary-500"
                 >
-                  <option value="">Все типы</option>
-                  <option value="individual">Индивидуальные</option>
-                  <option value="group">Групповые</option>
+                  <option value="">{t('specialist.training.all_types')}</option>
+                  <option value="individual">{t('specialist.consultations.individual')}</option>
+                  <option value="group">{t('specialist.consultations.group')}</option>
                 </select>
               </div>
               <div className="w-full md:w-1/4 flex items-end">
@@ -258,36 +260,36 @@ export default function SpecialistConsultationsPage() {
                   onClick={handleAddConsultation}
                   className="w-full px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md text-sm font-medium"
                 >
-                  Добавить консультацию
+                  {t('specialist.consultations.add_consultation')}
                 </button>
               </div>
             </div>
 
             {/* Предстоящие консультации */}
             <div className="mb-8">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Предстоящие консультации</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">{t('specialist.consultations.upcoming')}</h3>
               {upcomingConsultations.length > 0 ? (
                 <div className="bg-white shadow overflow-hidden sm:rounded-lg">
                   <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                       <tr>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Дата и время
+                          {t('specialist.consultations.date_time')}
                         </th>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Ученик
+                          {t('specialist.iop.student')}
                         </th>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Класс
+                          {t('specialist.students.grade')}
                         </th>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Тип
+                          {t('specialist.consultations.type')}
                         </th>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Статус
+                          {t('specialist.iop.status')}
                         </th>
                         <th scope="col" className="relative px-6 py-3">
-                          <span className="sr-only">Действия</span>
+                          <span className="sr-only">{t('common.actions')}</span>
                         </th>
                       </tr>
                     </thead>
@@ -321,13 +323,13 @@ export default function SpecialistConsultationsPage() {
                               onClick={() => handleViewConsultation(consultation)}
                               className="text-gray-600 hover:text-gray-900 mr-4"
                             >
-                              Просмотр
+                              {t('specialist.iop.view')}
                             </button>
                             <button
                               className="text-gray-600 hover:text-gray-900"
                               onClick={() => {/* Редактировать консультацию */}}
                             >
-                              Редактировать
+                              {t('specialist.iop.edit')}
                             </button>
                           </td>
                         </tr>
@@ -337,36 +339,36 @@ export default function SpecialistConsultationsPage() {
                 </div>
               ) : (
                 <div className="bg-white shadow overflow-hidden sm:rounded-lg p-6 text-center">
-                  <p className="text-gray-500">Нет предстоящих консультаций</p>
+                  <p className="text-gray-500">{t('specialist.consultations.no_upcoming')}</p>
                 </div>
               )}
             </div>
 
             {/* Прошедшие консультации */}
             <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Прошедшие консультации</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">{t('specialist.consultations.past')}</h3>
               {pastConsultations.length > 0 ? (
                 <div className="bg-white shadow overflow-hidden sm:rounded-lg">
                   <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                       <tr>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Дата и время
+                          {t('specialist.consultations.date_time')}
                         </th>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Ученик
+                          {t('specialist.iop.student')}
                         </th>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Класс
+                          {t('specialist.students.grade')}
                         </th>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Тип
+                          {t('specialist.consultations.type')}
                         </th>
                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Статус
+                          {t('specialist.iop.status')}
                         </th>
                         <th scope="col" className="relative px-6 py-3">
-                          <span className="sr-only">Действия</span>
+                          <span className="sr-only">{t('common.actions')}</span>
                         </th>
                       </tr>
                     </thead>
@@ -400,7 +402,7 @@ export default function SpecialistConsultationsPage() {
                               onClick={() => handleViewConsultation(consultation)}
                               className="text-gray-600 hover:text-gray-900"
                             >
-                              Просмотр
+                              {t('specialist.iop.view')}
                             </button>
                           </td>
                         </tr>
@@ -410,7 +412,7 @@ export default function SpecialistConsultationsPage() {
                 </div>
               ) : (
                 <div className="bg-white shadow overflow-hidden sm:rounded-lg p-6 text-center">
-                  <p className="text-gray-500">Нет прошедших консультаций</p>
+                  <p className="text-gray-500">{t('specialist.consultations.no_past')}</p>
                 </div>
               )}
             </div>
@@ -431,32 +433,32 @@ export default function SpecialistConsultationsPage() {
                 <div className="sm:flex sm:items-start">
                   <div className="mt-3 text-center sm:mt-0 sm:text-left w-full">
                     <h3 className="text-lg leading-6 font-medium text-gray-900">
-                      Информация о консультации
+                      {t('specialist.consultations.consultation_info')}
                     </h3>
                     <div className="mt-4">
                       <div className="mb-4">
-                        <h4 className="text-md font-medium text-gray-900">Дата и время</h4>
+                        <h4 className="text-md font-medium text-gray-900">{t('specialist.consultations.date_time')}</h4>
                         <p className="text-sm text-gray-500">
                           {new Date(selectedConsultation.date).toLocaleDateString()}, {' '}
                           {new Date(selectedConsultation.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </p>
                       </div>
                       <div className="mb-4">
-                        <h4 className="text-md font-medium text-gray-900">Ученик</h4>
+                        <h4 className="text-md font-medium text-gray-900">{t('specialist.iop.student')}</h4>
                         <p className="text-sm text-gray-500">{selectedConsultation.studentName}</p>
-                        <p className="text-sm text-gray-500">Класс: {selectedConsultation.grade}</p>
+                        <p className="text-sm text-gray-500">{t('specialist.students.grade')}: {selectedConsultation.grade}</p>
                       </div>
                       <div className="mb-4">
-                        <h4 className="text-md font-medium text-gray-900">Тип консультации</h4>
+                        <h4 className="text-md font-medium text-gray-900">{t('specialist.consultations.consultation_type')}</h4>
                         <p className="text-sm text-gray-500">{getTypeText(selectedConsultation.type)}</p>
                       </div>
                       <div className="mb-4">
-                        <h4 className="text-md font-medium text-gray-900">Статус</h4>
+                        <h4 className="text-md font-medium text-gray-900">{t('specialist.iop.status')}</h4>
                         <p className="text-sm text-gray-500">{getStatusText(selectedConsultation.status)}</p>
                       </div>
                       <div>
-                        <h4 className="text-md font-medium text-gray-900">Примечания</h4>
-                        <p className="text-sm text-gray-500">{selectedConsultation.notes || "Нет примечаний"}</p>
+                        <h4 className="text-md font-medium text-gray-900">{t('specialist.consultations.notes')}</h4>
+                        <p className="text-sm text-gray-500">{selectedConsultation.notes || t('specialist.consultations.no_notes')}</p>
                       </div>
                     </div>
                   </div>
@@ -468,7 +470,7 @@ export default function SpecialistConsultationsPage() {
                   onClick={() => setIsModalOpen(false)}
                   className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-600 text-base font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:ml-3 sm:w-auto sm:text-sm"
                 >
-                  Закрыть
+                  {t('specialist.iop.close')}
                 </button>
                 {selectedConsultation.status === "scheduled" && (
                   <button
@@ -476,7 +478,7 @@ export default function SpecialistConsultationsPage() {
                     onClick={() => {/* Редактировать консультацию */}}
                     className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                   >
-                    Редактировать
+                    {t('specialist.iop.edit')}
                   </button>
                 )}
               </div>
@@ -499,12 +501,12 @@ export default function SpecialistConsultationsPage() {
                   <div className="sm:flex sm:items-start">
                     <div className="mt-3 text-center sm:mt-0 sm:text-left w-full">
                       <h3 className="text-lg leading-6 font-medium text-gray-900">
-                        Добавить консультацию
+                        {t('specialist.consultations.add_consultation_title')}
                       </h3>
                       <div className="mt-4 space-y-4">
                         <div>
                           <label htmlFor="date" className="block text-sm font-medium text-gray-700">
-                            Дата
+                            {t('specialist.consultations.date')}
                           </label>
                           <input
                             type="date"
@@ -518,7 +520,7 @@ export default function SpecialistConsultationsPage() {
                         </div>
                         <div>
                           <label htmlFor="time" className="block text-sm font-medium text-gray-700">
-                            Время
+                            {t('specialist.consultations.time')}
                           </label>
                           <input
                             type="time"
@@ -532,7 +534,7 @@ export default function SpecialistConsultationsPage() {
                         </div>
                         <div>
                           <label htmlFor="studentId" className="block text-sm font-medium text-gray-700">
-                            Ученик
+                            {t('specialist.iop.student')}
                           </label>
                           <select
                             name="studentId"
@@ -542,7 +544,7 @@ export default function SpecialistConsultationsPage() {
                             required
                             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-500 focus:border-primary-500"
                           >
-                            <option value="">Выберите ученика</option>
+                            <option value="">{t('specialist.consultations.select_student')}</option>
                             {mockStudentOptions.map(student => (
                               <option key={student.id} value={student.id}>
                                 {student.name} ({student.grade})
@@ -552,7 +554,7 @@ export default function SpecialistConsultationsPage() {
                         </div>
                         <div>
                           <label htmlFor="type" className="block text-sm font-medium text-gray-700">
-                            Тип консультации
+                            {t('specialist.consultations.consultation_type_label')}
                           </label>
                           <select
                             name="type"
@@ -561,13 +563,13 @@ export default function SpecialistConsultationsPage() {
                             onChange={handleFormChange}
                             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-500 focus:border-primary-500"
                           >
-                            <option value="individual">Индивидуальная</option>
-                            <option value="group">Групповая</option>
+                            <option value="individual">{t('specialist.consultations.individual')}</option>
+                            <option value="group">{t('specialist.consultations.group')}</option>
                           </select>
                         </div>
                         <div>
                           <label htmlFor="notes" className="block text-sm font-medium text-gray-700">
-                            Примечания
+                            {t('specialist.consultations.notes_label')}
                           </label>
                           <textarea
                             name="notes"
@@ -587,14 +589,14 @@ export default function SpecialistConsultationsPage() {
                     type="submit"
                     className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-600 text-base font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:ml-3 sm:w-auto sm:text-sm"
                   >
-                    Добавить
+                    {t('specialist.consultations.add')}
                   </button>
                   <button
                     type="button"
                     onClick={() => setIsAddModalOpen(false)}
                     className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                   >
-                    Отмена
+                    {t('specialist.consultations.cancel')}
                   </button>
                 </div>
               </form>

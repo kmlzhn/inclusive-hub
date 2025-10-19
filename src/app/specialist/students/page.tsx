@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useState, useEffect } from "react";
 import NavBar from "@/components/layout/NavBar";
+import { useLanguage } from "@/context/LanguageContext";
 
 // Мок данных для учеников
 const mockStudents = [
@@ -72,6 +73,7 @@ export default function SpecialistStudentsPage() {
     },
   });
 
+  const { t } = useLanguage();
   const [students, setStudents] = useState(mockStudents);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterGrade, setFilterGrade] = useState("");
@@ -87,7 +89,7 @@ export default function SpecialistStudentsPage() {
   if (status === "loading") {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-lg">Загрузка...</p>
+        <p className="text-lg">{t('common.loading')}</p>
       </div>
     );
   }
@@ -105,17 +107,17 @@ export default function SpecialistStudentsPage() {
 
   const getSpecialistTitle = () => {
     switch (session?.user?.role) {
-      case "PSYCHOLOGIST": return "Психолог";
-      case "DEFECTOLOGIST": return "Дефектолог";
-      case "SPEECH_THERAPIST": return "Логопед";
-      case "TUTOR": return "Тьютор";
-      default: return "Специалист";
+      case "PSYCHOLOGIST": return t('role.psychologist');
+      case "DEFECTOLOGIST": return t('role.defectologist');
+      case "SPEECH_THERAPIST": return t('role.speech_therapist');
+      case "TUTOR": return t('role.tutor');
+      default: return t('role.user');
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <NavBar title={`${getSpecialistTitle()}: Мои ученики`} />
+      <NavBar title={`${getSpecialistTitle()}: ${t('dashboard.specialist.students')}`} />
 
       <main>
         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
@@ -123,25 +125,25 @@ export default function SpecialistStudentsPage() {
             {/* Фильтры и поиск */}
             <div className="flex flex-col md:flex-row justify-between mb-6 space-y-4 md:space-y-0">
               <div className="w-full md:w-1/3">
-                <label htmlFor="search" className="block text-sm font-medium text-gray-700">Поиск по имени</label>
+                <label htmlFor="search" className="block text-sm font-medium text-gray-700">{t('specialist.students.search_by_name')}</label>
                 <input
                   type="text"
                   id="search"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Введите ФИО ученика"
+                  placeholder={t('specialist.students.search_placeholder')}
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                 />
               </div>
               <div className="w-full md:w-1/4">
-                <label htmlFor="grade" className="block text-sm font-medium text-gray-700">Фильтр по классу</label>
+                <label htmlFor="grade" className="block text-sm font-medium text-gray-700">{t('specialist.students.filter_by_grade')}</label>
                 <select
                   id="grade"
                   value={filterGrade}
                   onChange={(e) => setFilterGrade(e.target.value)}
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                 >
-                  <option value="">Все классы</option>
+                  <option value="">{t('specialist.students.all_grades')}</option>
                   {uniqueGrades.map((grade: string) => (
                     <option key={grade} value={grade}>{grade}</option>
                   ))}
@@ -155,22 +157,22 @@ export default function SpecialistStudentsPage() {
                 <thead className="bg-gray-50">
                   <tr>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      ФИО
+                      {t('specialist.students.full_name')}
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Дата рождения
+                      {t('specialist.students.birth_date')}
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Класс
+                      {t('specialist.students.grade')}
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Особенности
+                      {t('specialist.students.special_needs')}
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Наблюдения
+                      {t('specialist.students.observations')}
                     </th>
                     <th scope="col" className="relative px-6 py-3">
-                      <span className="sr-only">Действия</span>
+                      <span className="sr-only">{t('common.actions')}</span>
                     </th>
                   </tr>
                 </thead>
@@ -209,13 +211,13 @@ export default function SpecialistStudentsPage() {
                           className="text-primary-600 hover:text-primary-900 mr-4"
                           onClick={() => {/* Перейти к профилю ученика */}}
                         >
-                          Профиль
+                          {t('specialist.students.profile')}
                         </button>
                         <button
                           className="text-primary-600 hover:text-primary-900"
                           onClick={() => {/* Добавить наблюдение */}}
                         >
-                          Наблюдение
+                          {t('specialist.students.observation')}
                         </button>
                       </td>
                     </tr>

@@ -4,41 +4,42 @@ import { useSession } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import NavBar from "@/components/layout/NavBar";
+import { useLanguage } from "@/context/LanguageContext";
 
 // Мок данных для пользователей
 const mockUsers = [
   {
     id: "1",
-    name: "Администратор",
-    email: "admin@school.ru",
+    name: "Әкімші",
+    email: "admin@school.kz",
     role: "ADMIN",
     createdAt: "2025-10-15T10:00:00Z"
   },
   {
     id: "2",
-    name: "Иванов Иван Иванович",
-    email: "ivanov@school.ru",
+    name: "Нұрлан Айдарұлы",
+    email: "nurlan@school.kz",
     role: "TEACHER",
     createdAt: "2025-10-15T10:00:00Z"
   },
   {
     id: "3",
-    name: "Петрова Анна Сергеевна",
-    email: "petrova@school.ru",
+    name: "Айгүл Сәбитқызы",
+    email: "aigul@school.kz",
     role: "PSYCHOLOGIST",
     createdAt: "2025-10-15T10:00:00Z"
   },
   {
     id: "4",
-    name: "Сидоров Павел Николаевич",
-    email: "sidorov@school.ru",
+    name: "Ерлан Қасымұлы",
+    email: "erlan@school.kz",
     role: "DEFECTOLOGIST",
     createdAt: "2025-10-15T10:00:00Z"
   },
   {
     id: "5",
-    name: "Козлова Елена Викторовна",
-    email: "kozlova@school.ru",
+    name: "Жанар Маратқызы",
+    email: "zhanar@school.kz",
     role: "SPEECH_THERAPIST",
     createdAt: "2025-10-15T10:00:00Z"
   }
@@ -52,6 +53,7 @@ export default function UsersManagement() {
     },
   });
 
+  const { t } = useLanguage();
   const router = useRouter();
   const [users, setUsers] = useState(mockUsers);
   const [selectedUser, setSelectedUser] = useState<any>(null);
@@ -73,20 +75,20 @@ export default function UsersManagement() {
   if (status === "loading") {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-lg">Загрузка...</p>
+        <p className="text-lg">{t('users.loading')}</p>
       </div>
     );
   }
 
   const getRoleName = (role: string) => {
     switch (role) {
-      case "ADMIN": return "Администратор";
-      case "TEACHER": return "Учитель";
-      case "PSYCHOLOGIST": return "Психолог";
-      case "DEFECTOLOGIST": return "Дефектолог";
-      case "SPEECH_THERAPIST": return "Логопед";
-      case "TUTOR": return "Тьютор";
-      default: return "Пользователь";
+      case "ADMIN": return t('roles.admin');
+      case "TEACHER": return t('roles.teacher');
+      case "PSYCHOLOGIST": return t('roles.psychologist');
+      case "DEFECTOLOGIST": return t('roles.defectologist');
+      case "SPEECH_THERAPIST": return t('roles.speech_therapist');
+      case "TUTOR": return t('roles.tutor');
+      default: return t('roles.user');
     }
   };
 
@@ -113,7 +115,7 @@ export default function UsersManagement() {
   };
 
   const handleDeleteUser = (userId: any) => {
-    if (window.confirm("Вы уверены, что хотите удалить этого пользователя?")) {
+    if (window.confirm(t('users.delete_confirm'))) {
       setUsers(users.filter(user => user.id !== userId));
     }
   };
@@ -153,7 +155,7 @@ export default function UsersManagement() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <NavBar title="Управление пользователями" />
+      <NavBar title={t('users.title')} />
 
       <main>
         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
@@ -163,7 +165,7 @@ export default function UsersManagement() {
                 onClick={handleCreateUser}
                 className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md text-sm font-medium"
               >
-                Добавить пользователя
+                {t('users.add_user')}
               </button>
             </div>
 
@@ -172,19 +174,19 @@ export default function UsersManagement() {
                 <thead className="bg-gray-50">
                   <tr>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      ФИО
+                      {t('users.full_name')}
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Email
+                      {t('users.email')}
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Роль
+                      {t('users.role')}
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Дата создания
+                      {t('users.created_date')}
                     </th>
                     <th scope="col" className="relative px-6 py-3">
-                      <span className="sr-only">Действия</span>
+                      <span className="sr-only">{t('users.actions')}</span>
                     </th>
                   </tr>
                 </thead>
@@ -210,13 +212,13 @@ export default function UsersManagement() {
                           onClick={() => handleEditUser(user)}
                           className="text-gray-600 hover:text-gray-900 mr-4"
                         >
-                          Редактировать
+                          {t('users.edit')}
                         </button>
                         <button
                           onClick={() => handleDeleteUser(user.id)}
                           className="text-red-600 hover:text-red-900"
                         >
-                          Удалить
+                          {t('users.delete')}
                         </button>
                       </td>
                     </tr>
@@ -242,12 +244,12 @@ export default function UsersManagement() {
                   <div className="sm:flex sm:items-start">
                     <div className="mt-3 text-center sm:mt-0 sm:text-left w-full">
                       <h3 className="text-lg leading-6 font-medium text-gray-900">
-                        {selectedUser ? "Редактировать пользователя" : "Добавить пользователя"}
+                        {selectedUser ? t('users.edit_user') : t('users.create_user')}
                       </h3>
                       <div className="mt-4 space-y-4">
                         <div>
                           <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                            ФИО
+                            {t('users.full_name')}
                           </label>
                           <input
                             type="text"
@@ -261,7 +263,7 @@ export default function UsersManagement() {
                         </div>
                         <div>
                           <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                            Email
+                            {t('users.email')}
                           </label>
                           <input
                             type="email"
@@ -275,7 +277,7 @@ export default function UsersManagement() {
                         </div>
                         <div>
                           <label htmlFor="role" className="block text-sm font-medium text-gray-700">
-                            Роль
+                            {t('users.role')}
                           </label>
                           <select
                             name="role"
@@ -284,18 +286,18 @@ export default function UsersManagement() {
                             onChange={handleFormChange}
                             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-500 focus:border-primary-500"
                           >
-                            <option value="ADMIN">Администратор</option>
-                            <option value="TEACHER">Учитель</option>
-                            <option value="PSYCHOLOGIST">Психолог</option>
-                            <option value="DEFECTOLOGIST">Дефектолог</option>
-                            <option value="SPEECH_THERAPIST">Логопед</option>
-                            <option value="TUTOR">Тьютор</option>
+                            <option value="ADMIN">{t('roles.admin')}</option>
+                            <option value="TEACHER">{t('roles.teacher')}</option>
+                            <option value="PSYCHOLOGIST">{t('roles.psychologist')}</option>
+                            <option value="DEFECTOLOGIST">{t('roles.defectologist')}</option>
+                            <option value="SPEECH_THERAPIST">{t('roles.speech_therapist')}</option>
+                            <option value="TUTOR">{t('roles.tutor')}</option>
                           </select>
                         </div>
                         {!selectedUser && (
                           <div>
                             <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                              Пароль
+                              {t('users.password')}
                             </label>
                             <input
                               type="password"
@@ -317,14 +319,14 @@ export default function UsersManagement() {
                     type="submit"
                     className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-600 text-base font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:ml-3 sm:w-auto sm:text-sm"
                   >
-                    {selectedUser ? "Сохранить" : "Создать"}
+                    {selectedUser ? t('users.save') : t('users.create')}
                   </button>
                   <button
                     type="button"
                     onClick={() => setIsModalOpen(false)}
                     className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                   >
-                    Отмена
+                    {t('users.cancel')}
                   </button>
                 </div>
               </form>

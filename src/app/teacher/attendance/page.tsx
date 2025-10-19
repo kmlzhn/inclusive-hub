@@ -3,6 +3,7 @@
 import { useSession } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function AttendancePage() {
   const { data: session, status } = useSession({
@@ -13,6 +14,7 @@ export default function AttendancePage() {
   });
   
   const router = useRouter();
+  const { t } = useLanguage();
   const [students, setStudents] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
@@ -61,6 +63,18 @@ export default function AttendancePage() {
     router.push("/dashboard");
   };
 
+  const translateAbsenceReason = (reason: string) => {
+    const reasonMap: { [key: string]: string } = {
+      'Болезнь': t('absence_reasons.illness'),
+      'Семейные обстоятельства': t('absence_reasons.family_circumstances'),
+      'Медицинский прием': t('absence_reasons.medical_appointment'),
+      'Проблемы с транспортом': t('absence_reasons.transport_issues'),
+      'Погодные условия': t('absence_reasons.weather'),
+      'Другое': t('absence_reasons.other'),
+    };
+    return reasonMap[reason] || reason;
+  };
+
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedDate(e.target.value);
     setIsLoading(true);
@@ -99,13 +113,13 @@ export default function AttendancePage() {
 
   const saveAttendance = () => {
     // В реальном приложении здесь будет запрос к API для сохранения данных
-    alert("Данные о посещаемости сохранены!");
+    alert(t('attendance.saved_success'));
   };
 
   if (status === "loading" || isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-lg">Загрузка...</p>
+        <p className="text-lg">{t('attendance.loading')}</p>
       </div>
     );
   }
@@ -114,12 +128,12 @@ export default function AttendancePage() {
     <div className="min-h-screen bg-gray-100">
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-900">Посещаемость</h1>
+          <h1 className="text-3xl font-bold text-gray-900">{t('attendance.title')}</h1>
           <button
             onClick={handleBackToDashboard}
             className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300"
           >
-            Назад
+            {t('attendance.back')}
           </button>
         </div>
       </header>
@@ -131,15 +145,15 @@ export default function AttendancePage() {
               <div className="px-4 py-5 sm:px-6 flex justify-between items-center">
                 <div>
                   <h3 className="text-lg leading-6 font-medium text-gray-900">
-                    Журнал посещаемости
+                    {t('attendance.journal_title')}
                   </h3>
                   <p className="mt-1 max-w-2xl text-sm text-gray-500">
-                    Отметьте присутствующих учеников
+                    {t('attendance.instruction')}
                   </p>
                 </div>
                 <div className="flex items-center">
                   <label htmlFor="date" className="mr-2 text-sm font-medium text-gray-700">
-                    Дата:
+                    {t('attendance.date_label')}
                   </label>
                   <input
                     type="date"
@@ -157,19 +171,19 @@ export default function AttendancePage() {
                   <thead className="bg-gray-50">
                     <tr>
                       <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Имя
+                        {t('attendance.table.name')}
                       </th>
                       <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Фамилия
+                        {t('attendance.table.surname')}
                       </th>
                       <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Класс
+                        {t('attendance.table.grade')}
                       </th>
                       <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Присутствие
+                        {t('attendance.table.presence')}
                       </th>
                       <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Причина отсутствия
+                        {t('attendance.table.absence_reason')}
                       </th>
                     </tr>
                   </thead>
@@ -194,7 +208,7 @@ export default function AttendancePage() {
                               className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                             />
                             <span className="ml-2">
-                              {student.attendance.present ? "Присутствует" : "Отсутствует"}
+                              {student.attendance.present ? t('attendance.present') : t('attendance.absent')}
                             </span>
                           </div>
                         </td>
@@ -204,7 +218,7 @@ export default function AttendancePage() {
                               type="text"
                               value={student.attendance.reason}
                               onChange={(e) => updateReason(student.id, e.target.value)}
-                              placeholder="Укажите причину"
+                              placeholder={t('attendance.reason_placeholder')}
                               className="shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 rounded-md"
                             />
                           )}
@@ -220,7 +234,7 @@ export default function AttendancePage() {
                   onClick={saveAttendance}
                   className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
                 >
-                  Сохранить
+                  {t('attendance.save_button')}
                 </button>
               </div>
             </div>

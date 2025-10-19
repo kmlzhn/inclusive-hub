@@ -3,27 +3,28 @@
 import { useSession } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 
 // Мок данных для отчетов
 const mockReports = [
   {
     id: "1",
-    title: "Отчет по успеваемости учеников с особыми потребностями",
-    description: "Анализ успеваемости учеников с особыми образовательными потребностями за последний квартал",
+    title: "Ерекше қажеттіліктері бар оқушылардың оқу нәтижелері бойынша есеп",
+    description: "Соңғы тоқсандағы ерекше білім беру қажеттіліктері бар оқушылардың оқу нәтижелерін талдау",
     date: "2025-10-01T10:00:00Z",
     type: "academic"
   },
   {
     id: "2",
-    title: "Отчет по посещаемости",
-    description: "Статистика посещаемости учеников с особыми потребностями",
+    title: "Қатысу бойынша есеп",
+    description: "Ерекше қажеттіліктері бар оқушылардың қатысу статистикасы",
     date: "2025-10-05T10:00:00Z",
     type: "attendance"
   },
   {
     id: "3",
-    title: "Отчет по индивидуальным планам",
-    description: "Анализ выполнения индивидуальных образовательных планов",
+    title: "Жеке жоспарлар бойынша есеп",
+    description: "Жеке білім беру жоспарларын орындауды талдау",
     date: "2025-10-10T10:00:00Z",
     type: "iop"
   }
@@ -51,6 +52,7 @@ export default function ReportsPage() {
     },
   });
 
+  const { t } = useLanguage();
   const router = useRouter();
   const [reports, setReports] = useState(mockReports);
   const [stats, setStats] = useState(mockStats);
@@ -67,7 +69,7 @@ export default function ReportsPage() {
   if (status === "loading") {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-lg">Загрузка...</p>
+        <p className="text-lg">{t('reports.loading')}</p>
       </div>
     );
   }
@@ -99,12 +101,12 @@ export default function ReportsPage() {
       {/* Основной контент */}
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <h2 className="text-3xl font-bold text-gray-900">Статистика и отчеты</h2>
+          <h2 className="text-3xl font-bold text-gray-900">{t('reports.title')}</h2>
           <button
             onClick={handleBackToDashboard}
             className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md text-sm font-medium"
           >
-            Назад к панели управления
+            {t('reports.back_to_dashboard')}
           </button>
         </div>
       </header>
@@ -114,12 +116,12 @@ export default function ReportsPage() {
           <div className="px-4 py-6 sm:px-0">
             {/* Статистика */}
             <div className="mb-8">
-              <h3 className="text-xl font-semibold mb-4">Общая статистика</h3>
+              <h3 className="text-xl font-semibold mb-4">{t('reports.general_statistics')}</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div className="bg-white overflow-hidden shadow rounded-lg">
                   <div className="px-4 py-5 sm:p-6">
                     <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">Всего учеников с ООП</dt>
+                      <dt className="text-sm font-medium text-gray-500 truncate">{t('reports.total_students_sen')}</dt>
                       <dd className="mt-1 text-3xl font-semibold text-gray-900">{stats.totalStudents}</dd>
                     </dl>
                   </div>
@@ -127,7 +129,7 @@ export default function ReportsPage() {
                 <div className="bg-white overflow-hidden shadow rounded-lg">
                   <div className="px-4 py-5 sm:p-6">
                     <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">Всего учителей</dt>
+                      <dt className="text-sm font-medium text-gray-500 truncate">{t('reports.total_teachers')}</dt>
                       <dd className="mt-1 text-3xl font-semibold text-gray-900">{stats.totalTeachers}</dd>
                     </dl>
                   </div>
@@ -135,7 +137,7 @@ export default function ReportsPage() {
                 <div className="bg-white overflow-hidden shadow rounded-lg">
                   <div className="px-4 py-5 sm:p-6">
                     <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">Посещаемость</dt>
+                      <dt className="text-sm font-medium text-gray-500 truncate">{t('reports.attendance')}</dt>
                       <dd className="mt-1 text-3xl font-semibold text-gray-900">{stats.attendanceRate}%</dd>
                     </dl>
                   </div>
@@ -143,7 +145,7 @@ export default function ReportsPage() {
                 <div className="bg-white overflow-hidden shadow rounded-lg">
                   <div className="px-4 py-5 sm:p-6">
                     <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">Выполнение ИОП</dt>
+                      <dt className="text-sm font-medium text-gray-500 truncate">{t('reports.iop_completion')}</dt>
                       <dd className="mt-1 text-3xl font-semibold text-gray-900">{stats.iopCompletionRate}%</dd>
                     </dl>
                   </div>
@@ -151,7 +153,7 @@ export default function ReportsPage() {
                 <div className="bg-white overflow-hidden shadow rounded-lg">
                   <div className="px-4 py-5 sm:p-6">
                     <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">Психологи</dt>
+                      <dt className="text-sm font-medium text-gray-500 truncate">{t('reports.psychologists')}</dt>
                       <dd className="mt-1 text-3xl font-semibold text-gray-900">{stats.specialistsCount.psychologists}</dd>
                     </dl>
                   </div>
@@ -159,7 +161,7 @@ export default function ReportsPage() {
                 <div className="bg-white overflow-hidden shadow rounded-lg">
                   <div className="px-4 py-5 sm:p-6">
                     <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">Дефектологи</dt>
+                      <dt className="text-sm font-medium text-gray-500 truncate">{t('reports.defectologists')}</dt>
                       <dd className="mt-1 text-3xl font-semibold text-gray-900">{stats.specialistsCount.defectologists}</dd>
                     </dl>
                   </div>
@@ -169,22 +171,22 @@ export default function ReportsPage() {
 
             {/* Отчеты */}
             <div>
-              <h3 className="text-xl font-semibold mb-4">Доступные отчеты</h3>
+              <h3 className="text-xl font-semibold mb-4">{t('reports.available_reports')}</h3>
               <div className="bg-white shadow overflow-hidden sm:rounded-lg">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
                       <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Название
+                        {t('reports.report_name')}
                       </th>
                       <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Описание
+                        {t('reports.report_description')}
                       </th>
                       <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Дата
+                        {t('reports.report_date')}
                       </th>
                       <th scope="col" className="relative px-6 py-3">
-                        <span className="sr-only">Действия</span>
+                        <span className="sr-only">{t('reports.actions')}</span>
                       </th>
                     </tr>
                   </thead>
@@ -205,7 +207,7 @@ export default function ReportsPage() {
                             onClick={() => handleViewReport(report)}
                             className="text-primary-600 hover:text-primary-900"
                           >
-                            Просмотреть
+                            {t('reports.view')}
                           </button>
                         </td>
                       </tr>
@@ -238,12 +240,12 @@ export default function ReportsPage() {
                         {selectedReport.description}
                       </p>
                       <p className="text-sm text-gray-500 mt-2">
-                        Дата: {new Date(selectedReport.date).toLocaleDateString()}
+                        {t('reports.report_date')}: {new Date(selectedReport.date).toLocaleDateString()}
                       </p>
                       <div className="mt-4">
-                        <p className="text-sm font-medium text-gray-700">Содержание отчета:</p>
+                        <p className="text-sm font-medium text-gray-700">{t('reports.report_content')}</p>
                         <p className="text-sm text-gray-500 mt-2">
-                          Здесь будет отображаться содержание отчета. В настоящее время это демонстрационная версия.
+                          {t('reports.demo_content')}
                         </p>
                       </div>
                     </div>
@@ -256,13 +258,13 @@ export default function ReportsPage() {
                   onClick={() => setIsModalOpen(false)}
                   className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-600 text-base font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:ml-3 sm:w-auto sm:text-sm"
                 >
-                  Закрыть
+                  {t('reports.close')}
                 </button>
                 <button
                   type="button"
                   className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                 >
-                  Скачать PDF
+                  {t('reports.download_pdf')}
                 </button>
               </div>
             </div>

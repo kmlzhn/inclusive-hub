@@ -3,48 +3,49 @@
 import { useSession } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 
 // Мок данных для ресурсов
 const mockResources = [
   {
     id: "1",
-    name: "Кабинет психолога",
+    name: "Психолог кабинеті",
     type: "room",
     availability: "available",
     assignedTo: null,
-    description: "Кабинет для индивидуальных занятий с психологом"
+    description: "Психологпен жеке сабақтар өткізуге арналған кабинет"
   },
   {
     id: "2",
-    name: "Сенсорная комната",
+    name: "Сенсорлық бөлме",
     type: "room",
     availability: "occupied",
-    assignedTo: "Петрова Анна Сергеевна",
-    description: "Комната для сенсорной интеграции"
+    assignedTo: "Айгүл Сәбитқызы",
+    description: "Сенсорлық интеграцияға арналған бөлме"
   },
   {
     id: "3",
-    name: "Набор для развития моторики",
+    name: "Моторика дамыту жинағы",
     type: "equipment",
     availability: "available",
     assignedTo: null,
-    description: "Набор инструментов для развития мелкой моторики"
+    description: "Жіңішке моторика дамытуға арналған құралдар жинағы"
   },
   {
     id: "4",
-    name: "Логопедический набор",
+    name: "Логопедиялық жинақ",
     type: "equipment",
     availability: "occupied",
-    assignedTo: "Козлова Елена Викторовна",
-    description: "Набор для логопедических занятий"
+    assignedTo: "Жанар Маратқызы",
+    description: "Логопедиялық сабақтарға арналған жинақ"
   },
   {
     id: "5",
-    name: "Планшет для коммуникации",
+    name: "Коммуникация планшеты",
     type: "device",
     availability: "maintenance",
     assignedTo: null,
-    description: "Планшет с программой альтернативной коммуникации"
+    description: "Альтернативті коммуникация бағдарламасы бар планшет"
   }
 ];
 
@@ -56,6 +57,7 @@ export default function ResourcesPage() {
     },
   });
 
+  const { t } = useLanguage();
   const router = useRouter();
   const [resources, setResources] = useState(mockResources);
   const [selectedResource, setSelectedResource] = useState<any>(null);
@@ -79,7 +81,7 @@ export default function ResourcesPage() {
   if (status === "loading") {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-lg">Загрузка...</p>
+        <p className="text-lg">{t('resources.loading')}</p>
       </div>
     );
   }
@@ -113,7 +115,7 @@ export default function ResourcesPage() {
   };
 
   const handleDeleteResource = (resourceId: any) => {
-    if (window.confirm("Вы уверены, что хотите удалить этот ресурс?")) {
+    if (window.confirm(t('resources.delete_confirm'))) {
       setResources(resources.filter(resource => resource.id !== resourceId));
     }
   };
@@ -174,19 +176,19 @@ export default function ResourcesPage() {
 
   const getAvailabilityText = (availability: string) => {
     switch (availability) {
-      case "available": return "Доступен";
-      case "occupied": return "Занят";
-      case "maintenance": return "На обслуживании";
-      default: return "Неизвестно";
+      case "available": return t('resource_status.available');
+      case "occupied": return t('resource_status.occupied');
+      case "maintenance": return t('resource_status.maintenance');
+      default: return t('resource_status.unknown');
     }
   };
 
   const getResourceTypeText = (type: string) => {
     switch (type) {
-      case "room": return "Помещение";
-      case "equipment": return "Оборудование";
-      case "device": return "Устройство";
-      default: return "Другое";
+      case "room": return t('resource_types.room');
+      case "equipment": return t('resource_types.equipment');
+      case "device": return t('resource_types.device');
+      default: return t('resource_types.other');
     }
   };
 
@@ -208,12 +210,12 @@ export default function ResourcesPage() {
       {/* Основной контент */}
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <h2 className="text-3xl font-bold text-gray-900">Распределение ресурсов</h2>
+          <h2 className="text-3xl font-bold text-gray-900">{t('resources.title')}</h2>
           <button
             onClick={handleBackToDashboard}
             className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md text-sm font-medium"
           >
-            Назад к панели управления
+            {t('resources.back_to_dashboard')}
           </button>
         </div>
       </header>
@@ -223,24 +225,24 @@ export default function ResourcesPage() {
           <div className="px-4 py-6 sm:px-0">
             <div className="flex justify-between mb-4">
               <div className="flex items-center space-x-4">
-                <label htmlFor="filter" className="text-sm font-medium text-gray-700">Фильтр:</label>
+                <label htmlFor="filter" className="text-sm font-medium text-gray-700">{t('resources.filter')}</label>
                 <select
                   id="filter"
                   value={filterType}
                   onChange={(e) => setFilterType(e.target.value)}
                   className="rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
                 >
-                  <option value="all">Все ресурсы</option>
-                  <option value="room">Помещения</option>
-                  <option value="equipment">Оборудование</option>
-                  <option value="device">Устройства</option>
+                  <option value="all">{t('resources.all_resources')}</option>
+                  <option value="room">{t('resources.rooms')}</option>
+                  <option value="equipment">{t('resources.equipment')}</option>
+                  <option value="device">{t('resources.devices')}</option>
                 </select>
               </div>
               <button
                 onClick={handleCreateResource}
                 className="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-md text-sm font-medium"
               >
-                Добавить ресурс
+                {t('resources.add_resource')}
               </button>
             </div>
 
@@ -249,22 +251,22 @@ export default function ResourcesPage() {
                 <thead className="bg-gray-50">
                   <tr>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Название
+                      {t('resources.resource_name')}
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Тип
+                      {t('resources.resource_type')}
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Статус
+                      {t('resources.resource_status')}
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Назначен
+                      {t('resources.assigned_to')}
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Описание
+                      {t('resources.description')}
                     </th>
                     <th scope="col" className="relative px-6 py-3">
-                      <span className="sr-only">Действия</span>
+                      <span className="sr-only">{t('resources.actions')}</span>
                     </th>
                   </tr>
                 </thead>
@@ -293,13 +295,13 @@ export default function ResourcesPage() {
                           onClick={() => handleEditResource(resource)}
                           className="text-primary-600 hover:text-primary-900 mr-4"
                         >
-                          Редактировать
+                          {t('resources.edit')}
                         </button>
                         <button
                           onClick={() => handleDeleteResource(resource.id)}
                           className="text-red-600 hover:text-red-900"
                         >
-                          Удалить
+                          {t('resources.delete')}
                         </button>
                       </td>
                     </tr>
@@ -325,12 +327,12 @@ export default function ResourcesPage() {
                   <div className="sm:flex sm:items-start">
                     <div className="mt-3 text-center sm:mt-0 sm:text-left w-full">
                       <h3 className="text-lg leading-6 font-medium text-gray-900">
-                        {selectedResource ? "Редактировать ресурс" : "Добавить ресурс"}
+                        {selectedResource ? t('resources.edit_resource') : t('resources.create_resource')}
                       </h3>
                       <div className="mt-4 space-y-4">
                         <div>
                           <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                            Название
+                            {t('resources.resource_name')}
                           </label>
                           <input
                             type="text"
@@ -344,7 +346,7 @@ export default function ResourcesPage() {
                         </div>
                         <div>
                           <label htmlFor="type" className="block text-sm font-medium text-gray-700">
-                            Тип
+                            {t('resources.resource_type')}
                           </label>
                           <select
                             name="type"
@@ -353,14 +355,14 @@ export default function ResourcesPage() {
                             onChange={handleFormChange}
                             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                           >
-                            <option value="room">Помещение</option>
-                            <option value="equipment">Оборудование</option>
-                            <option value="device">Устройство</option>
+                            <option value="room">{t('resource_types.room')}</option>
+                            <option value="equipment">{t('resource_types.equipment')}</option>
+                            <option value="device">{t('resource_types.device')}</option>
                           </select>
                         </div>
                         <div>
                           <label htmlFor="availability" className="block text-sm font-medium text-gray-700">
-                            Статус
+                            {t('resources.resource_status')}
                           </label>
                           <select
                             name="availability"
@@ -369,14 +371,14 @@ export default function ResourcesPage() {
                             onChange={handleFormChange}
                             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                           >
-                            <option value="available">Доступен</option>
-                            <option value="occupied">Занят</option>
-                            <option value="maintenance">На обслуживании</option>
+                            <option value="available">{t('resource_status.available')}</option>
+                            <option value="occupied">{t('resource_status.occupied')}</option>
+                            <option value="maintenance">{t('resource_status.maintenance')}</option>
                           </select>
                         </div>
                         <div>
                           <label htmlFor="assignedTo" className="block text-sm font-medium text-gray-700">
-                            Назначен (оставьте пустым, если не назначен)
+                            {t('resources.assigned_to_placeholder')}
                           </label>
                           <input
                             type="text"
@@ -389,7 +391,7 @@ export default function ResourcesPage() {
                         </div>
                         <div>
                           <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-                            Описание
+                            {t('resources.description')}
                           </label>
                           <textarea
                             name="description"
@@ -409,14 +411,14 @@ export default function ResourcesPage() {
                     type="submit"
                     className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-600 text-base font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:ml-3 sm:w-auto sm:text-sm"
                   >
-                    {selectedResource ? "Сохранить" : "Создать"}
+                    {selectedResource ? t('resources.save') : t('resources.create')}
                   </button>
                   <button
                     type="button"
                     onClick={() => setIsModalOpen(false)}
                     className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                   >
-                    Отмена
+                    {t('resources.cancel')}
                   </button>
                 </div>
               </form>

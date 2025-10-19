@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function LoginForm() {
   const [email, setEmail] = useState('');
@@ -10,6 +11,7 @@ export default function LoginForm() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { t } = useLanguage();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,7 +33,7 @@ export default function LoginForm() {
 
       router.push('/dashboard');
     } catch (err) {
-      setError('Произошла ошибка при входе. Пожалуйста, попробуйте снова.');
+      setError(t('auth.login.error'));
       setIsLoading(false);
     }
   };
@@ -39,7 +41,7 @@ export default function LoginForm() {
 
   return (
     <div className="bg-white p-8 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Вход в систему</h2>
+      <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">{t('auth.login.title')}</h2>
       
       {error && (
         <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
@@ -50,7 +52,7 @@ export default function LoginForm() {
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <label htmlFor="email" className="label">
-            Email
+            {t('auth.login.email')}
           </label>
           <input
             id="email"
@@ -61,13 +63,13 @@ export default function LoginForm() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="input"
-            placeholder="example@school.ru"
+            placeholder={t('auth.login.email_placeholder')}
           />
         </div>
         
         <div>
           <label htmlFor="password" className="label">
-            Пароль
+            {t('auth.login.password')}
           </label>
           <input
             id="password"
@@ -87,7 +89,7 @@ export default function LoginForm() {
             disabled={isLoading}
             className={`btn btn-primary w-full ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
           >
-            {isLoading ? 'Вход...' : 'Войти'}
+            {isLoading ? t('auth.login.submitting') : t('auth.login.submit')}
           </button>
         </div>
       </form>

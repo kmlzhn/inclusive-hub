@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useState, useEffect } from "react";
 import NavBar from "@/components/layout/NavBar";
+import { useLanguage } from "@/context/LanguageContext";
 
 // Мок данных для тренингов психолога
 const psychologistTrainings = [
@@ -161,6 +162,7 @@ export default function SpecialistTrainingPage() {
     },
   });
 
+  const { t } = useLanguage();
   const [trainings, setTrainings] = useState<any[]>([]);
   const [filterType, setFilterType] = useState("");
   const [selectedTraining, setSelectedTraining] = useState<any>(null);
@@ -195,7 +197,7 @@ export default function SpecialistTrainingPage() {
   if (status === "loading") {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-lg">Загрузка...</p>
+        <p className="text-lg">{t('common.loading')}</p>
       </div>
     );
   }
@@ -221,10 +223,10 @@ export default function SpecialistTrainingPage() {
 
   const getTrainingTypeText = (type: string) => {
     switch (type) {
-      case "webinar": return "Вебинар";
-      case "workshop": return "Практикум";
-      case "course": return "Курс";
-      default: return "Неизвестно";
+      case "webinar": return t('specialist.training.webinar');
+      case "workshop": return t('specialist.training.workshop');
+      case "course": return t('specialist.training.course');
+      default: return t('specialist.iop.unknown');
     }
   };
 
@@ -239,21 +241,21 @@ export default function SpecialistTrainingPage() {
 
   const getSpecialistTitle = () => {
     switch (session?.user?.role) {
-      case "PSYCHOLOGIST": return "Психолог";
-      case "DEFECTOLOGIST": return "Дефектолог";
-      case "SPEECH_THERAPIST": return "Логопед";
-      case "TUTOR": return "Тьютор";
-      default: return "Специалист";
+      case "PSYCHOLOGIST": return t('role.psychologist');
+      case "DEFECTOLOGIST": return t('role.defectologist');
+      case "SPEECH_THERAPIST": return t('role.speech_therapist');
+      case "TUTOR": return t('role.tutor');
+      default: return t('role.user');
     }
   };
 
   const getSpecialistTrainingTitle = () => {
     switch (session?.user?.role) {
-      case "PSYCHOLOGIST": return "Тренинги по психологической поддержке";
-      case "DEFECTOLOGIST": return "Тренинги по коррекционной педагогике";
-      case "SPEECH_THERAPIST": return "Тренинги по речевому развитию";
-      case "TUTOR": return "Тренинги по тьюторскому сопровождению";
-      default: return "Тренинги";
+      case "PSYCHOLOGIST": return t('specialist.training.psychologist_title');
+      case "DEFECTOLOGIST": return t('specialist.training.defectologist_title');
+      case "SPEECH_THERAPIST": return t('specialist.training.speech_title');
+      case "TUTOR": return t('specialist.training.tutor_title');
+      default: return t('dashboard.specialist.training');
     }
   };
 
@@ -267,24 +269,24 @@ export default function SpecialistTrainingPage() {
             {/* Фильтры */}
             <div className="flex flex-col md:flex-row justify-between mb-6 space-y-4 md:space-y-0">
               <div className="w-full md:w-1/4">
-                <label htmlFor="type" className="block text-sm font-medium text-gray-700">Фильтр по типу</label>
+                <label htmlFor="type" className="block text-sm font-medium text-gray-700">{t('specialist.training.filter_by_type')}</label>
                 <select
                   id="type"
                   value={filterType}
                   onChange={(e) => setFilterType(e.target.value)}
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                 >
-                  <option value="">Все типы</option>
-                  <option value="webinar">Вебинары</option>
-                  <option value="workshop">Практикумы</option>
-                  <option value="course">Курсы</option>
+                  <option value="">{t('specialist.training.all_types')}</option>
+                  <option value="webinar">{t('specialist.training.webinars')}</option>
+                  <option value="workshop">{t('specialist.training.workshops')}</option>
+                  <option value="course">{t('specialist.training.courses')}</option>
                 </select>
               </div>
             </div>
 
             {/* Предстоящие тренинги */}
             <div className="mb-8">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Предстоящие тренинги</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">{t('specialist.training.upcoming')}</h3>
               {upcomingTrainings.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {upcomingTrainings.map((training) => (
@@ -299,14 +301,14 @@ export default function SpecialistTrainingPage() {
                         <p className="text-sm text-gray-600 mb-3">{training.description}</p>
                         <div className="text-sm text-gray-500">
                           <p>
-                            <span className="font-medium">Дата:</span> {new Date(training.date).toLocaleDateString()}, {' '}
+                            <span className="font-medium">{t('specialist.training.date')}:</span> {new Date(training.date).toLocaleDateString()}, {' '}
                             {new Date(training.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </p>
                           <p>
-                            <span className="font-medium">Продолжительность:</span> {training.duration} мин.
+                            <span className="font-medium">{t('specialist.training.duration')}:</span> {training.duration} мин.
                           </p>
                           <p>
-                            <span className="font-medium">Ведущий:</span> {training.instructor}
+                            <span className="font-medium">{t('specialist.training.instructor')}:</span> {training.instructor}
                           </p>
                         </div>
                       </div>
@@ -315,7 +317,7 @@ export default function SpecialistTrainingPage() {
                           onClick={() => handleViewTraining(training)}
                           className="text-sm text-primary-600 hover:text-primary-800"
                         >
-                          Подробнее
+{t('specialist.training.more_details')}
                         </button>
                       </div>
                     </div>
@@ -323,14 +325,14 @@ export default function SpecialistTrainingPage() {
                 </div>
               ) : (
                 <div className="bg-white shadow overflow-hidden sm:rounded-lg p-6 text-center">
-                  <p className="text-gray-500">Нет предстоящих тренингов</p>
+                  <p className="text-gray-500">{t('specialist.training.no_upcoming')}</p>
                 </div>
               )}
             </div>
 
             {/* Прошедшие тренинги */}
             <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Прошедшие тренинги</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">{t('specialist.training.completed')}</h3>
               {completedTrainings.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {completedTrainings.map((training) => (
@@ -345,26 +347,26 @@ export default function SpecialistTrainingPage() {
                         <p className="text-sm text-gray-600 mb-3">{training.description}</p>
                         <div className="text-sm text-gray-500">
                           <p>
-                            <span className="font-medium">Дата:</span> {new Date(training.date).toLocaleDateString()}, {' '}
+                            <span className="font-medium">{t('specialist.training.date')}:</span> {new Date(training.date).toLocaleDateString()}, {' '}
                             {new Date(training.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </p>
                           <p>
-                            <span className="font-medium">Продолжительность:</span> {training.duration} мин.
+                            <span className="font-medium">{t('specialist.training.duration')}:</span> {training.duration} мин.
                           </p>
                           <p>
-                            <span className="font-medium">Ведущий:</span> {training.instructor}
+                            <span className="font-medium">{t('specialist.training.instructor')}:</span> {training.instructor}
                           </p>
                         </div>
                       </div>
                       <div className="bg-gray-50 px-4 py-3 flex justify-between">
                         <span className="text-sm text-gray-500">
-                          {training.isCompleted ? "Пройден" : "Не пройден"}
+                          {training.isCompleted ? t('specialist.training.completed_status') : t('specialist.training.not_completed_status')}
                         </span>
                         <button
                           onClick={() => handleViewTraining(training)}
                           className="text-sm text-primary-600 hover:text-primary-800"
                         >
-                          Подробнее
+{t('specialist.training.more_details')}
                         </button>
                       </div>
                     </div>
@@ -372,7 +374,7 @@ export default function SpecialistTrainingPage() {
                 </div>
               ) : (
                 <div className="bg-white shadow overflow-hidden sm:rounded-lg p-6 text-center">
-                  <p className="text-gray-500">Нет прошедших тренингов</p>
+                  <p className="text-gray-500">{t('specialist.training.no_completed')}</p>
                 </div>
               )}
             </div>
@@ -405,22 +407,22 @@ export default function SpecialistTrainingPage() {
                         <p className="text-sm text-gray-600">{selectedTraining.description}</p>
                       </div>
                       <div className="mb-4">
-                        <h4 className="text-sm font-medium text-gray-700">Дата и время</h4>
+                        <h4 className="text-sm font-medium text-gray-700">{t('specialist.training.date_time')}</h4>
                         <p className="text-sm text-gray-500">
                           {new Date(selectedTraining.date).toLocaleDateString()}, {' '}
                           {new Date(selectedTraining.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </p>
                       </div>
                       <div className="mb-4">
-                        <h4 className="text-sm font-medium text-gray-700">Продолжительность</h4>
+                        <h4 className="text-sm font-medium text-gray-700">{t('specialist.training.duration')}</h4>
                         <p className="text-sm text-gray-500">{selectedTraining.duration} минут</p>
                       </div>
                       <div className="mb-4">
-                        <h4 className="text-sm font-medium text-gray-700">Ведущий</h4>
+                        <h4 className="text-sm font-medium text-gray-700">{t('specialist.training.instructor')}</h4>
                         <p className="text-sm text-gray-500">{selectedTraining.instructor}</p>
                       </div>
                       <div>
-                        <h4 className="text-sm font-medium text-gray-700">Материалы</h4>
+                        <h4 className="text-sm font-medium text-gray-700">{t('specialist.training.materials')}</h4>
                         <ul className="list-disc pl-5 text-sm text-gray-500">
                           {selectedTraining.materials.map((material: string, index: number) => (
                             <li key={index}>{material}</li>
@@ -437,7 +439,7 @@ export default function SpecialistTrainingPage() {
                     type="button"
                     className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-600 text-base font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:ml-3 sm:w-auto sm:text-sm"
                   >
-                    Записаться
+                    {t('specialist.training.register')}
                   </button>
                 )}
                 {selectedTraining.isCompleted || new Date(selectedTraining.date) <= new Date() ? (
@@ -445,7 +447,7 @@ export default function SpecialistTrainingPage() {
                     type="button"
                     className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-600 text-base font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:ml-3 sm:w-auto sm:text-sm"
                   >
-                    Скачать материалы
+                    {t('specialist.training.download_materials')}
                   </button>
                 ) : null}
                 <button
@@ -453,7 +455,7 @@ export default function SpecialistTrainingPage() {
                   onClick={() => setIsModalOpen(false)}
                   className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                 >
-                  Закрыть
+                  {t('specialist.training.close')}
                 </button>
               </div>
             </div>

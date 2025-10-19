@@ -1,8 +1,9 @@
 "use client";
 
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useLanguage } from "@/context/LanguageContext";
+import NavBar from "@/components/layout/NavBar";
 
 export default function Dashboard() {
   const { data: session, status } = useSession({
@@ -13,25 +14,25 @@ export default function Dashboard() {
   });
   
   const router = useRouter();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { t } = useLanguage();
 
   if (status === "loading") {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-lg">Загрузка...</p>
+        <p className="text-lg">{t('common.loading')}</p>
       </div>
     );
   }
 
   const getRoleName = (role: string) => {
     switch (role) {
-      case "ADMIN": return "Администратор";
-      case "TEACHER": return "Учитель";
-      case "PSYCHOLOGIST": return "Психолог";
-      case "DEFECTOLOGIST": return "Дефектолог";
-      case "SPEECH_THERAPIST": return "Логопед";
-      case "TUTOR": return "Тьютор";
-      default: return "Пользователь";
+      case "ADMIN": return t('role.admin');
+      case "TEACHER": return t('role.teacher');
+      case "PSYCHOLOGIST": return t('role.psychologist');
+      case "DEFECTOLOGIST": return t('role.defectologist');
+      case "SPEECH_THERAPIST": return t('role.speech_therapist');
+      case "TUTOR": return t('role.tutor');
+      default: return t('role.user');
     }
   };
 
@@ -39,48 +40,48 @@ export default function Dashboard() {
     switch (session?.user?.role) {
       case "ADMIN":
         return [
-          { name: "Управление пользователями", description: "Добавление и редактирование учетных записей", path: "/admin/users" },
-          { name: "Статистика и отчеты", description: "Общая статистика по школе", path: "/admin/reports" },
-          { name: "Распределение ресурсов", description: "Управление ресурсами школы", path: "/admin/resources" }
+          { name: t('dashboard.admin.user_management'), description: t('dashboard.admin.user_management_desc'), path: "/admin/users" },
+          { name: t('dashboard.admin.reports'), description: t('dashboard.admin.reports_desc'), path: "/admin/reports" },
+          { name: t('dashboard.admin.resources'), description: t('dashboard.admin.resources_desc'), path: "/admin/resources" }
         ];
       case "TEACHER":
         return [
-          { name: "Мои ученики", description: "Список учеников с особыми потребностями", path: "/teacher/students" },
-          { name: "Задания", description: "Создание и проверка заданий", path: "/teacher/assignments" },
-          { name: "Посещаемость", description: "Отметка посещаемости", path: "/teacher/attendance" },
-          { name: "Обучение", description: "Тренинги и консультации для учителей", path: "/teacher/training" }
+          { name: t('dashboard.teacher.students'), description: t('dashboard.teacher.students_desc'), path: "/teacher/students" },
+          { name: t('dashboard.teacher.assignments'), description: t('dashboard.teacher.assignments_desc'), path: "/teacher/assignments" },
+          { name: t('dashboard.teacher.attendance'), description: t('dashboard.teacher.attendance_desc'), path: "/teacher/attendance" },
+          { name: t('dashboard.teacher.training'), description: t('dashboard.teacher.training_desc'), path: "/teacher/training" }
         ];
       case "PSYCHOLOGIST":
         return [
-          { name: "Мои ученики", description: "Список учеников с особыми потребностями", path: "/specialist/students" },
-          { name: "Индивидуальные планы", description: "Индивидуальные образовательные планы", path: "/specialist/iop" },
-          { name: "Консультации", description: "Расписание и записи консультаций", path: "/specialist/consultations" },
-          { name: "Отчеты", description: "Отчеты о проделанной работе", path: "/specialist/reports" },
-          { name: "Тренинги", description: "Материалы по психологической поддержке", path: "/specialist/training" }
+          { name: t('dashboard.specialist.students'), description: t('dashboard.specialist.students_desc'), path: "/specialist/students" },
+          { name: t('dashboard.specialist.iop'), description: t('dashboard.specialist.iop_desc'), path: "/specialist/iop" },
+          { name: t('dashboard.specialist.consultations'), description: t('dashboard.specialist.consultations_desc'), path: "/specialist/consultations" },
+          { name: t('dashboard.specialist.reports'), description: t('dashboard.specialist.reports_desc'), path: "/specialist/reports" },
+          { name: t('dashboard.specialist.training'), description: t('dashboard.specialist.training_desc_psychologist'), path: "/specialist/training" }
         ];
       case "DEFECTOLOGIST":
         return [
-          { name: "Мои ученики", description: "Список учеников с особыми потребностями", path: "/specialist/students" },
-          { name: "Индивидуальные планы", description: "Индивидуальные образовательные планы", path: "/specialist/iop" },
-          { name: "Консультации", description: "Расписание и записи консультаций", path: "/specialist/consultations" },
-          { name: "Отчеты", description: "Отчеты о проделанной работе", path: "/specialist/reports" },
-          { name: "Тренинги", description: "Материалы по коррекционной педагогике", path: "/specialist/training" }
+          { name: t('dashboard.specialist.students'), description: t('dashboard.specialist.students_desc'), path: "/specialist/students" },
+          { name: t('dashboard.specialist.iop'), description: t('dashboard.specialist.iop_desc'), path: "/specialist/iop" },
+          { name: t('dashboard.specialist.consultations'), description: t('dashboard.specialist.consultations_desc'), path: "/specialist/consultations" },
+          { name: t('dashboard.specialist.reports'), description: t('dashboard.specialist.reports_desc'), path: "/specialist/reports" },
+          { name: t('dashboard.specialist.training'), description: t('dashboard.specialist.training_desc_defectologist'), path: "/specialist/training" }
         ];
       case "SPEECH_THERAPIST":
         return [
-          { name: "Мои ученики", description: "Список учеников с особыми потребностями", path: "/specialist/students" },
-          { name: "Индивидуальные планы", description: "Индивидуальные образовательные планы", path: "/specialist/iop" },
-          { name: "Консультации", description: "Расписание и записи консультаций", path: "/specialist/consultations" },
-          { name: "Отчеты", description: "Отчеты о проделанной работе", path: "/specialist/reports" },
-          { name: "Тренинги", description: "Материалы по речевому развитию", path: "/specialist/training" }
+          { name: t('dashboard.specialist.students'), description: t('dashboard.specialist.students_desc'), path: "/specialist/students" },
+          { name: t('dashboard.specialist.iop'), description: t('dashboard.specialist.iop_desc'), path: "/specialist/iop" },
+          { name: t('dashboard.specialist.consultations'), description: t('dashboard.specialist.consultations_desc'), path: "/specialist/consultations" },
+          { name: t('dashboard.specialist.reports'), description: t('dashboard.specialist.reports_desc'), path: "/specialist/reports" },
+          { name: t('dashboard.specialist.training'), description: t('dashboard.specialist.training_desc_speech'), path: "/specialist/training" }
         ];
       case "TUTOR":
         return [
-          { name: "Мои ученики", description: "Список учеников с особыми потребностями", path: "/specialist/students" },
-          { name: "Индивидуальные планы", description: "Индивидуальные образовательные планы", path: "/specialist/iop" },
-          { name: "Консультации", description: "Расписание и записи консультаций", path: "/specialist/consultations" },
-          { name: "Отчеты", description: "Отчеты о проделанной работе", path: "/specialist/reports" },
-          { name: "Тренинги", description: "Материалы по тьюторскому сопровождению", path: "/specialist/training" }
+          { name: t('dashboard.specialist.students'), description: t('dashboard.specialist.students_desc'), path: "/specialist/students" },
+          { name: t('dashboard.specialist.iop'), description: t('dashboard.specialist.iop_desc'), path: "/specialist/iop" },
+          { name: t('dashboard.specialist.consultations'), description: t('dashboard.specialist.consultations_desc'), path: "/specialist/consultations" },
+          { name: t('dashboard.specialist.reports'), description: t('dashboard.specialist.reports_desc'), path: "/specialist/reports" },
+          { name: t('dashboard.specialist.training'), description: t('dashboard.specialist.training_desc_tutor'), path: "/specialist/training" }
         ];
       default:
         return [];
@@ -89,50 +90,8 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Навигационная панель */}
-      <nav className="bg-primary-700 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <h1 className="text-xl font-bold">InclusiveHub</h1>
-              </div>
-            </div>
-            <div className="hidden md:block">
-              <div className="ml-4 flex items-center md:ml-6">
-                <div className="relative">
-                  <button
-                    onClick={() => setIsMenuOpen(!isMenuOpen)}
-                    className="flex items-center max-w-xs text-sm focus:outline-none"
-                  >
-                    <span className="mr-2">{session?.user?.name}</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                    </svg>
-                  </button>
-                  {isMenuOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
-                      <button
-                        onClick={() => signOut({ callbackUrl: "/auth/login" })}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        Выйти
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <NavBar title={t('page.dashboard.title')} />
 
-      {/* Основной контент */}
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-gray-900">Панель управления</h2>
-        </div>
-      </header>
       <main>
         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
           {/* Информация о пользователе */}
@@ -140,25 +99,25 @@ export default function Dashboard() {
             <div className="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
               <div className="px-4 py-5 sm:px-6">
                 <h3 className="text-lg leading-6 font-medium text-gray-900">
-                  Информация о пользователе
+                  {t('page.dashboard.user_info')}
                 </h3>
               </div>
               <div className="border-t border-gray-200">
                 <dl>
                   <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-500">ФИО</dt>
+                    <dt className="text-sm font-medium text-gray-500">{t('page.dashboard.user_name')}</dt>
                     <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                       {session?.user?.name}
                     </dd>
                   </div>
                   <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-500">Email</dt>
+                    <dt className="text-sm font-medium text-gray-500">{t('page.dashboard.user_email')}</dt>
                     <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                       {session?.user?.email}
                     </dd>
                   </div>
                   <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-500">Роль</dt>
+                    <dt className="text-sm font-medium text-gray-500">{t('page.dashboard.user_role')}</dt>
                     <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                       {getRoleName(session?.user?.role || "")}
                     </dd>
@@ -169,7 +128,7 @@ export default function Dashboard() {
 
             {/* Общие ресурсы - доступны для всех */}
             <div className="mb-6">
-              <h3 className="text-xl font-semibold mb-4">Общие ресурсы</h3>
+              <h3 className="text-xl font-semibold mb-4">{t('page.dashboard.common_resources')}</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* AI Чат-бот */}
                 <div className="bg-white overflow-hidden shadow rounded-lg border border-gray-200">
@@ -183,8 +142,8 @@ export default function Dashboard() {
                         </div>
                       </div>
                       <div className="ml-4 flex-1">
-                        <h4 className="text-lg font-medium text-gray-900">AI Чат-бот по инклюзии</h4>
-                        <p className="mt-1 text-sm text-gray-600">Получите помощь по вопросам инклюзивного образования</p>
+                        <h4 className="text-lg font-medium text-gray-900">{t('page.dashboard.ai_chatbot')}</h4>
+                        <p className="mt-1 text-sm text-gray-600">{t('page.dashboard.ai_chatbot_desc')}</p>
                       </div>
                     </div>
                   </div>
@@ -193,7 +152,7 @@ export default function Dashboard() {
                       onClick={() => router.push("/chat")}
                       className="text-sm text-blue-600 hover:text-blue-800 font-medium"
                     >
-                      Открыть чат-бот →
+                      {t('page.dashboard.open_chat')}
                     </button>
                   </div>
                 </div>
@@ -210,8 +169,8 @@ export default function Dashboard() {
                         </div>
                       </div>
                       <div className="ml-4 flex-1">
-                        <h4 className="text-lg font-medium text-gray-900">Нормативные акты</h4>
-                        <p className="mt-1 text-sm text-gray-600">Законы и правовые документы по инклюзии</p>
+                        <h4 className="text-lg font-medium text-gray-900">{t('page.dashboard.normative_acts.title')}</h4>
+                        <p className="mt-1 text-sm text-gray-600">{t('page.dashboard.normative_acts.description')}</p>
                       </div>
                     </div>
                   </div>
@@ -220,7 +179,7 @@ export default function Dashboard() {
                       onClick={() => router.push("/legal")}
                       className="text-sm text-green-600 hover:text-green-800 font-medium"
                     >
-                      Открыть документы →
+                      {t('page.dashboard.normative_acts.open')}
                     </button>
                   </div>
                 </div>
@@ -228,7 +187,7 @@ export default function Dashboard() {
             </div>
 
             {/* Доступные модули */}
-            <h3 className="text-xl font-semibold mb-4">Доступные модули</h3>
+            <h3 className="text-xl font-semibold mb-4">{t('page.dashboard.role_modules')}</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {getModulesByRole().map((module, index) => (
                 <div key={index} className="bg-white overflow-hidden shadow rounded-lg">
@@ -241,7 +200,7 @@ export default function Dashboard() {
                       onClick={() => module.path && router.push(module.path)}
                       className="text-sm text-primary-600 hover:text-primary-800"
                     >
-                      Открыть
+                      {t('common.open')}
                     </button>
                   </div>
                 </div>

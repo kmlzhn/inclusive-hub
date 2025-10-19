@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useState, useEffect } from "react";
 import NavBar from "@/components/layout/NavBar";
+import { useLanguage } from "@/context/LanguageContext";
 
 // Мок данных для отчетов
 const mockReports = [
@@ -41,6 +42,7 @@ export default function SpecialistReportsPage() {
     },
   });
 
+  const { t } = useLanguage();
   const [reports, setReports] = useState(mockReports);
   const [filterStatus, setFilterStatus] = useState("");
   const [selectedReport, setSelectedReport] = useState<any>(null);
@@ -63,7 +65,7 @@ export default function SpecialistReportsPage() {
   if (status === "loading") {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-lg">Загрузка...</p>
+        <p className="text-lg">{t('common.loading')}</p>
       </div>
     );
   }
@@ -127,26 +129,26 @@ export default function SpecialistReportsPage() {
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case "draft": return "Черновик";
-      case "submitted": return "Отправлен";
-      case "rejected": return "Отклонен";
-      default: return "Неизвестно";
+      case "draft": return t('specialist.reports.draft');
+      case "submitted": return t('specialist.reports.submitted');
+      case "rejected": return t('specialist.reports.rejected');
+      default: return t('specialist.iop.unknown');
     }
   };
 
   const getSpecialistTitle = () => {
     switch (session?.user?.role) {
-      case "PSYCHOLOGIST": return "Психолог";
-      case "DEFECTOLOGIST": return "Дефектолог";
-      case "SPEECH_THERAPIST": return "Логопед";
-      case "TUTOR": return "Тьютор";
-      default: return "Специалист";
+      case "PSYCHOLOGIST": return t('role.psychologist');
+      case "DEFECTOLOGIST": return t('role.defectologist');
+      case "SPEECH_THERAPIST": return t('role.speech_therapist');
+      case "TUTOR": return t('role.tutor');
+      default: return t('role.user');
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <NavBar title={`${getSpecialistTitle()}: Отчеты`} />
+      <NavBar title={`${getSpecialistTitle()}: ${t('dashboard.specialist.reports')}`} />
 
       <main>
         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
@@ -154,17 +156,17 @@ export default function SpecialistReportsPage() {
             {/* Фильтры и кнопка добавления */}
             <div className="flex flex-col md:flex-row justify-between mb-6 space-y-4 md:space-y-0">
               <div className="w-full md:w-1/4">
-                <label htmlFor="status" className="block text-sm font-medium text-gray-700">Фильтр по статусу</label>
+                <label htmlFor="status" className="block text-sm font-medium text-gray-700">{t('specialist.reports.filter_by_status')}</label>
                 <select
                   id="status"
                   value={filterStatus}
                   onChange={(e) => setFilterStatus(e.target.value)}
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-500 focus:border-primary-500"
                 >
-                  <option value="">Все статусы</option>
-                  <option value="draft">Черновики</option>
-                  <option value="submitted">Отправленные</option>
-                  <option value="rejected">Отклоненные</option>
+                  <option value="">{t('specialist.iop.all_statuses')}</option>
+                  <option value="draft">{t('specialist.reports.draft')}</option>
+                  <option value="submitted">{t('specialist.reports.submitted')}</option>
+                  <option value="rejected">{t('specialist.reports.rejected')}</option>
                 </select>
               </div>
               <div className="w-full md:w-1/4 flex items-end">
@@ -172,7 +174,7 @@ export default function SpecialistReportsPage() {
                   onClick={handleAddReport}
                   className="w-full px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md text-sm font-medium"
                 >
-                  Создать отчет
+                  {t('specialist.reports.create_report')}
                 </button>
               </div>
             </div>
@@ -184,19 +186,19 @@ export default function SpecialistReportsPage() {
                   <thead className="bg-gray-50">
                     <tr>
                       <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Название
+                        {t('specialist.reports.title')}
                       </th>
                       <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Период
+                        {t('specialist.reports.period')}
                       </th>
                       <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Дата создания
+                        {t('specialist.reports.created_date')}
                       </th>
                       <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Статус
+                        {t('specialist.iop.status')}
                       </th>
                       <th scope="col" className="relative px-6 py-3">
-                        <span className="sr-only">Действия</span>
+                        <span className="sr-only">{t('common.actions')}</span>
                       </th>
                     </tr>
                   </thead>
@@ -224,7 +226,7 @@ export default function SpecialistReportsPage() {
                             onClick={() => handleViewReport(report)}
                             className="text-gray-600 hover:text-gray-900 mr-4"
                           >
-                            Просмотр
+                            {t('specialist.reports.view')}
                           </button>
                           {report.status === "draft" && (
                             <>
@@ -232,13 +234,13 @@ export default function SpecialistReportsPage() {
                                 className="text-gray-600 hover:text-gray-900 mr-4"
                                 onClick={() => {/* Редактировать отчет */}}
                               >
-                                Редактировать
+                                {t('specialist.reports.edit')}
                               </button>
                               <button
                                 className="text-green-600 hover:text-green-900"
                                 onClick={() => {/* Отправить отчет */}}
                               >
-                                Отправить
+                                {t('specialist.reports.send')}
                               </button>
                             </>
                           )}
@@ -249,7 +251,7 @@ export default function SpecialistReportsPage() {
                 </table>
               ) : (
                 <div className="p-6 text-center">
-                  <p className="text-gray-500">Нет отчетов, соответствующих фильтру</p>
+                  <p className="text-gray-500">{t('specialist.reports.no_reports')}</p>
                 </div>
               )}
             </div>
@@ -274,21 +276,21 @@ export default function SpecialistReportsPage() {
                     </h3>
                     <div className="mt-2">
                       <div className="mb-4">
-                        <h4 className="text-sm font-medium text-gray-700">Период</h4>
+                        <h4 className="text-sm font-medium text-gray-700">{t('specialist.reports.period')}</h4>
                         <p className="text-sm text-gray-500">{selectedReport.period}</p>
                       </div>
                       <div className="mb-4">
-                        <h4 className="text-sm font-medium text-gray-700">Дата создания</h4>
+                        <h4 className="text-sm font-medium text-gray-700">{t('specialist.reports.created_date')}</h4>
                         <p className="text-sm text-gray-500">
                           {new Date(selectedReport.createdAt).toLocaleDateString()}
                         </p>
                       </div>
                       <div className="mb-4">
-                        <h4 className="text-sm font-medium text-gray-700">Статус</h4>
+                        <h4 className="text-sm font-medium text-gray-700">{t('specialist.iop.status')}</h4>
                         <p className="text-sm text-gray-500">{getStatusText(selectedReport.status)}</p>
                       </div>
                       <div>
-                        <h4 className="text-sm font-medium text-gray-700">Содержание</h4>
+                        <h4 className="text-sm font-medium text-gray-700">{t('specialist.reports.content')}</h4>
                         <p className="text-sm text-gray-500 mt-2 whitespace-pre-line">{selectedReport.content}</p>
                       </div>
                     </div>
@@ -301,7 +303,7 @@ export default function SpecialistReportsPage() {
                   onClick={() => setIsModalOpen(false)}
                   className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-600 text-base font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:ml-3 sm:w-auto sm:text-sm"
                 >
-                  Закрыть
+                  {t('specialist.reports.close')}
                 </button>
                 {selectedReport.status === "draft" && (
                   <button
@@ -309,7 +311,7 @@ export default function SpecialistReportsPage() {
                     onClick={() => {/* Редактировать отчет */}}
                     className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                   >
-                    Редактировать
+                    {t('specialist.reports.edit')}
                   </button>
                 )}
               </div>
@@ -332,12 +334,12 @@ export default function SpecialistReportsPage() {
                   <div className="sm:flex sm:items-start">
                     <div className="mt-3 text-center sm:mt-0 sm:text-left w-full">
                       <h3 className="text-lg leading-6 font-medium text-gray-900">
-                        Создать отчет
+                        {t('specialist.reports.create_report')}
                       </h3>
                       <div className="mt-4 space-y-4">
                         <div>
                           <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-                            Название отчета
+                            {t('specialist.reports.report_title')}
                           </label>
                           <input
                             type="text"
@@ -351,7 +353,7 @@ export default function SpecialistReportsPage() {
                         </div>
                         <div>
                           <label htmlFor="period" className="block text-sm font-medium text-gray-700">
-                            Период
+                            {t('specialist.reports.period')}
                           </label>
                           <input
                             type="text"
@@ -360,13 +362,13 @@ export default function SpecialistReportsPage() {
                             value={formData.period}
                             onChange={handleFormChange}
                             required
-                            placeholder="Например: Октябрь 2025"
+                            placeholder={t('specialist.reports.period_placeholder')}
                             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-500 focus:border-primary-500"
                           />
                         </div>
                         <div>
                           <label htmlFor="content" className="block text-sm font-medium text-gray-700">
-                            Содержание отчета
+                            {t('specialist.reports.content')}
                           </label>
                           <textarea
                             name="content"
@@ -387,14 +389,14 @@ export default function SpecialistReportsPage() {
                     type="submit"
                     className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-600 text-base font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:ml-3 sm:w-auto sm:text-sm"
                   >
-                    Создать
+                    {t('specialist.reports.create')}
                   </button>
                   <button
                     type="button"
                     onClick={() => setIsAddModalOpen(false)}
                     className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                   >
-                    Отмена
+                    {t('common.cancel')}
                   </button>
                 </div>
               </form>
